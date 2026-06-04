@@ -172,7 +172,17 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
   letter-spacing: -.005em;
 }
 .hero h1 .accent { color: var(--orange); display: block; }
-.hero__lead { max-width: 620px; margin: 26px 0 34px; font-size: 19px; color: #d6dde4; }
+.hero__station {
+  display: flex; align-items: center; gap: 12px;
+  margin: 20px 0 0;
+  font-family: "Oswald", sans-serif; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .03em; line-height: 1;
+  font-size: clamp(26px, 4.4vw, 50px);
+  color: var(--text);
+}
+.hero__station svg { width: .82em; height: .82em; color: var(--orange); flex: none; }
+.hero__station .city { color: var(--orange); }
+.hero__lead { max-width: 620px; margin: 22px 0 34px; font-size: 19px; color: #d6dde4; }
 .hero__cta { display: flex; gap: 16px; flex-wrap: wrap; }
 
 /* ---- Stats strip ---------------------------------------- */
