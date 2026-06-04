@@ -1,0 +1,116 @@
+VCSAR Team 1 — Team Admin Setup (Supabase)
+==========================================
+
+The Team page reads the roster live, and admin.html lets you add/edit/delete
+members and upload photos (auto-resized to a 4:5 portrait). Data + photos live
+in a free Supabase project you own. One-time setup, ~15 minutes.
+
+Everything the website needs is the project URL + the PUBLISHABLE key (Supabase
+renamed the old "anon / public" key to "publishable"; it starts with
+"sb_publishable_"). Those are safe to expose publicly — security comes from the
+rules in Step 4 (anyone can READ the roster; only a logged-in admin can change it).
+
+IMPORTANT: there is also a SECRET key (starts with "sb_secret_", formerly
+"service_role"). It bypasses all security — NEVER put it in the website or share
+it. Only the publishable key goes into supabase-config.js.
+
+----------------------------------------------------------------
+STEP 1 — Create a Supabase project
+----------------------------------------------------------------
+1. Go to https://supabase.com and sign up (free).
+2. Click "New project". Give it a name (e.g. "vcsar-team"), set a database
+   password (save it somewhere), pick a region near you, and create it.
+3. Wait ~2 minutes for it to finish provisioning.
+
+----------------------------------------------------------------
+STEP 2 — Create the members table
+----------------------------------------------------------------
+4. In the left sidebar click "SQL Editor" ▸ "New query".
+5. Paste the whole block below and click "Run".
+
+------------------------ SQL — paste this ------------------------
+create extension if not exists "pgcrypto";
+
+create table public.members (
+  id         uuid primary key default gen_random_uuid(),
+  name       text not null,
+  role       text,
+  since      int,
+  quote      text,
+  photo      text,
+  created_at timestamptz default now()
+);
+
+alter table public.members enable row level security;
+
+-- Anyone may READ the roster (public website)
+create policy "public read" on public.members
+  for select using (true);
+
+-- Only logged-in admins may add / change / remove
+create policy "auth insert" on public.members
+  for insert to authenticated with check (true);
+create policy "auth update" on public.members
+  for update to authenticated using (true);
+create policy "auth delete" on public.members
+  for delete to authenticated using (true);
+------------------------------------------------------------------
+
+----------------------------------------------------------------
+STEP 3 — Create the photo storage bucket
+----------------------------------------------------------------
+6. Sidebar ▸ "Storage" ▸ "New bucket".
+7. Name it exactly:  member-photos
+8. Turn ON "Public bucket" (so photos display on the site). Create it.
+9. Open the bucket ▸ "Policies" ▸ and add a policy that lets logged-in
+   users upload. Easiest: click "New policy" ▸ "For full customization",
+   and add an INSERT (and UPDATE) policy for role "authenticated".
+   (Public read is already on because the bucket is public.)
+
+----------------------------------------------------------------
+STEP 4 — Create your admin login
+----------------------------------------------------------------
+10. Sidebar ▸ "Authentication" ▸ "Users" ▸ "Add user" ▸ "Create new user".
+11. Enter your email + a password and create it. This is what you'll type
+    into admin.html to sign in. (Add more users here for other admins.)
+    Tip: Authentication ▸ Providers ▸ Email — turn OFF "Confirm email"
+    so the account works immediately.
+
+----------------------------------------------------------------
+STEP 5 — Connect the website
+----------------------------------------------------------------
+12. Sidebar ▸ "Project Settings" ▸ "API Keys". Copy:
+       • Project URL        (under "Data API" / "Project URL",
+                             e.g. https://abcdefgh.supabase.co)
+       • The PUBLISHABLE key (starts with "sb_publishable_...").
+         This is the renamed "anon / public" key.
+       Do NOT copy the Secret key ("sb_secret_...") — it never goes on the site.
+       (On older projects the publishable key may instead be a long token
+        starting with "eyJhbGci..." labeled "anon public" — that's fine too.)
+13. Open  supabase-config.js  and paste them in:
+       window.SUPABASE_URL  = "https://abcdefgh.supabase.co";
+       window.SUPABASE_ANON = "sb_publishable_xxxxxxxxxxxxx";
+14. Save. Done!
+
+Open  admin.html  in your browser, sign in with the user from Step 4, and add
+your team. The Team page updates instantly — no redeploy needed.
+
+----------------------------------------------------------------
+USING THE ADMIN PAGE
+----------------------------------------------------------------
+- "+ Add Member": name, role, year joined (years-on-team is computed and the
+  roster auto-sorts by seniority), an optional quote, and a photo.
+- Photos: click/drop an image — it's auto-cropped to a 4:5 portrait. Use the
+  "Vertical crop" slider to frame the face, then Save. The resized image
+  (800×1000, ~optimized JPEG) is uploaded for you.
+- Edit / Delete from each row.
+
+----------------------------------------------------------------
+KEEPING admin.html PRIVATE
+----------------------------------------------------------------
+The page is already marked "noindex" and requires a Supabase login to make any
+change. For an extra layer on Netlify, you can password-protect the page:
+  • Netlify ▸ Site settings ▸ Visitor access / Password protection, or
+  • add Netlify Identity, or
+  • simply rename admin.html to something only you know (e.g. admin-7x9.html).
+Ask me and I can set any of these up.

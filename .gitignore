@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Large unused asset — the chopper video isn't used on the site yet.
+# Remove this line when we add the video section so it deploys.
+images/SARwebsite-Home-chopper-bg.mp4

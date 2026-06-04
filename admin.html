@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Team Admin · VCSAR Team 1</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#181c11" />
+<link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<style>
+  body { background: var(--bg); }
+  .admin-wrap { max-width: 1040px; margin: 0 auto; padding: 28px; }
+  .admin-top { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 26px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+  .admin-top h1 { font-family:"Oswald",sans-serif; text-transform:uppercase; font-size: 26px; margin: 0; letter-spacing:.04em; }
+  .admin-top h1 small { display:block; font-family:"Inter",sans-serif; text-transform:none; letter-spacing:0; font-weight:500; font-size:13px; color:var(--muted); margin-top:2px; }
+  .pill { font-family:"Oswald",sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:11px; padding:5px 12px; border-radius:100px; border:1px solid var(--line); color:var(--muted); }
+  .pill.live { color:#cfe6b8; border-color:rgba(120,180,90,.5); background:rgba(120,180,90,.12); }
+  .pill.demo { color:#ffd9c8; border-color:rgba(255,90,31,.5); background:rgba(255,90,31,.12); }
+
+  .banner { background: rgba(255,90,31,.1); border:1px solid rgba(255,90,31,.4); color:#ffd9c8; padding:14px 18px; border-radius:3px; font-size:14px; margin-bottom:24px; }
+
+  /* login */
+  .login { max-width: 400px; margin: 8vh auto; }
+  .login .form { padding: 36px; }
+
+  /* toolbar */
+  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; flex-wrap:wrap; }
+  .toolbar .count { color:var(--muted); font-size:14px; }
+
+  /* member rows */
+  .rows { border:1px solid var(--line); border-radius:3px; overflow:hidden; }
+  .row { display:grid; grid-template-columns:64px 1fr auto; gap:16px; align-items:center; padding:12px 16px; background:var(--surface); border-bottom:1px solid var(--line); }
+  .row:last-child { border-bottom:0; }
+  .row:hover { background:var(--surface-2); }
+  .row__thumb { width:56px; height:70px; object-fit:cover; border-radius:2px; background:var(--surface-2); }
+  .row__thumb--ph { display:grid; place-items:center; color:var(--faint); }
+  .row__name { font-family:"Oswald",sans-serif; font-weight:600; font-size:17px; text-transform:uppercase; letter-spacing:.02em; }
+  .row__meta { color:var(--muted); font-size:13.5px; margin-top:2px; }
+  .row__yrs { color:var(--orange); font-weight:600; }
+  .row__actions { display:flex; gap:8px; }
+  .iconbtn { background:var(--bg); border:1px solid var(--line); color:var(--muted); border-radius:2px; padding:8px 14px; cursor:pointer; font-family:"Oswald",sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:12px; transition:all .2s; }
+  .iconbtn:hover { border-color:var(--orange); color:var(--text); }
+  .iconbtn.danger:hover { border-color:#e0533a; color:#ff9d86; }
+  .empty { padding:50px; text-align:center; color:var(--faint); background:var(--surface); }
+
+  /* modal */
+  .modal { position:fixed; inset:0; background:rgba(8,9,6,.8); display:none; align-items:flex-start; justify-content:center; padding:40px 20px; z-index:100; overflow:auto; }
+  .modal.open { display:flex; }
+  .modal__card { background:var(--bg-2); border:1px solid var(--line); border-radius:4px; width:100%; max-width:640px; padding:32px; }
+  .modal__card h2 { font-family:"Oswald",sans-serif; text-transform:uppercase; font-size:22px; margin:0 0 22px; }
+  .modal__foot { display:flex; gap:12px; justify-content:flex-end; margin-top:26px; padding-top:22px; border-top:1px solid var(--line); }
+
+  /* photo editor */
+  .photoedit { display:grid; grid-template-columns:140px 1fr; gap:20px; align-items:start; }
+  .preview { width:140px; height:175px; border-radius:3px; overflow:hidden; background:var(--surface-2); border:1px solid var(--line); }
+  .preview img { width:100%; height:100%; object-fit:cover; display:block; }
+  .preview__ph { width:100%; height:100%; display:grid; place-items:center; color:var(--faint); }
+  .drop { border:1.5px dashed var(--line); border-radius:3px; padding:18px; text-align:center; color:var(--muted); font-size:14px; cursor:pointer; transition:border-color .2s; }
+  .drop:hover, .drop.drag { border-color:var(--orange); color:var(--text); }
+  .crople { font-size:12px; color:var(--faint); margin:12px 0 6px; font-family:"Oswald",sans-serif; text-transform:uppercase; letter-spacing:.1em; }
+  input[type=range].crop { width:100%; accent-color:var(--orange); }
+  .busy { opacity:.5; pointer-events:none; }
+  @media (max-width:560px){ .photoedit{ grid-template-columns:1fr; } .row{ grid-template-columns:48px 1fr; } .row__actions{ grid-column:1/-1; justify-content:flex-end; } }
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+  <div class="admin-top">
+    <h1>Team Admin <small>VCSAR Team 1 · roster manager</small></h1>
+    <div id="statepill"></div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login" id="loginView" style="display:none">
+    <form class="form" id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required /></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPass" required /></div>
+      <button class="btn btn--primary btn--block" type="submit" id="loginBtn">Sign In →</button>
+      <div class="form__status" id="loginStatus" role="status"></div>
+    </form>
+  </div>
+
+  <!-- MANAGER -->
+  <div id="manageView" style="display:none">
+    <div id="demoBanner" class="banner" style="display:none">
+      <strong>Demo mode.</strong> Supabase isn't connected yet, so changes here are temporary and won't be saved.
+      Follow <code>form-backend/TEAM-ADMIN-SETUP.txt</code> to go live.
+    </div>
+    <div class="toolbar">
+      <span class="count" id="count">—</span>
+      <div style="display:flex;gap:10px">
+        <button class="iconbtn" id="signoutBtn" style="display:none">Sign out</button>
+        <button class="btn btn--primary" id="addBtn">+ Add Member</button>
+      </div>
+    </div>
+    <div class="rows" id="rows"></div>
+  </div>
+</div>
+
+<!-- EDITOR MODAL -->
+<div class="modal" id="modal">
+  <div class="modal__card">
+    <h2 id="modalTitle">Add Member</h2>
+    <form id="memberForm">
+      <input type="hidden" id="m_id" />
+      <div class="photoedit">
+        <div>
+          <div class="preview" id="preview"><div class="preview__ph"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div></div>
+        </div>
+        <div>
+          <div class="drop" id="drop">Click or drop a photo here<br><span style="font-size:12px;color:var(--faint)">JPG/PNG · resized to a 4:5 portrait automatically</span></div>
+          <input type="file" id="fileInput" accept="image/*" style="display:none" />
+          <div id="cropControls" style="display:none">
+            <div class="crople">Vertical crop — frame the face</div>
+            <input type="range" class="crop" id="cropY" min="0" max="100" value="50" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field--row" style="margin-top:22px">
+        <div class="field"><label>Full name <span class="reqstar">*</span></label><input type="text" id="m_name" required /></div>
+        <div class="field"><label>Role / specialty</label><input type="text" id="m_role" placeholder="Team Captain, Medical Lead, Rope Tech…" /></div>
+      </div>
+      <div class="field--row">
+        <div class="field"><label>Year joined <span class="reqstar">*</span></label><input type="number" id="m_since" required min="1946" max="2100" placeholder="e.g. 2015" /></div>
+        <div class="field"><label>Years on team</label><input type="text" id="m_years" disabled placeholder="auto" /></div>
+      </div>
+      <div class="field"><label>Quote (optional)</label><input type="text" id="m_quote" placeholder="What SAR means to me…" /></div>
+
+      <div class="form__status" id="memberStatus" role="status"></div>
+      <div class="modal__foot">
+        <button type="button" class="btn btn--ghost" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn--primary" id="saveBtn">Save Member</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const CURRENT_YEAR = new Date().getFullYear();
+const URL_ = window.SUPABASE_URL, KEY_ = window.SUPABASE_ANON, BUCKET = window.SUPABASE_BUCKET || 'member-photos';
+const LIVE = !!(URL_ && KEY_ && window.supabase);
+let sb = LIVE ? window.supabase.createClient(URL_, KEY_) : null;
+
+// state
+let listCache = [];
+let pendingBlob = null;     // resized photo Blob awaiting upload
+let pendingDataURL = null;  // preview
+let sourceImage = null;     // loaded Image for re-cropping
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function setPill(){
+  const p = $('statepill');
+  p.innerHTML = LIVE ? '<span class="pill live">● Live</span>' : '<span class="pill demo">Demo mode</span>';
+}
+
+/* ---------- Auth ---------- */
+async function init(){
+  setPill();
+  if(!LIVE){
+    // demo: seed a couple of members, skip login
+    listCache = [
+      { id:'d1', name:'Alex Rivera', role:'Team Captain', since:2002, quote:'Service above self.', photo:'' },
+      { id:'d2', name:'Sam Okafor', role:'Medical Lead', since:2011, quote:'', photo:'' },
+      { id:'d3', name:'Jordan Lee', role:'Rope / Technical', since:2019, quote:'', photo:'' }
+    ];
+    $('demoBanner').style.display='block';
+    showManager();
+    return;
+  }
+  const { data } = await sb.auth.getSession();
+  if(data && data.session){ showManager(); loadMembers(); }
+  else showLogin();
+}
+
+function showLogin(){ $('loginView').style.display='block'; $('manageView').style.display='none'; }
+function showManager(){ $('loginView').style.display='none'; $('manageView').style.display='block'; $('signoutBtn').style.display = LIVE ? 'inline-flex':'none'; renderRows(); }
+
+$('loginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const st=$('loginStatus'); st.className='form__status'; $('loginBtn').disabled=true; $('loginBtn').textContent='Signing in…';
+  const { error } = await sb.auth.signInWithPassword({ email:$('loginEmail').value, password:$('loginPass').value });
+  $('loginBtn').disabled=false; $('loginBtn').textContent='Sign In →';
+  if(error){ st.textContent=error.message; st.className='form__status err show'; return; }
+  showManager(); loadMembers();
+});
+$('signoutBtn').addEventListener('click', async ()=>{ await sb.auth.signOut(); location.reload(); });
+
+/* ---------- Load + render ---------- */
+async function loadMembers(){
+  if(!LIVE){ renderRows(); return; }
+  const { data, error } = await sb.from('members').select('*');
+  if(error){ alert('Could not load roster: '+error.message); return; }
+  listCache = data||[];
+  renderRows();
+}
+
+function renderRows(){
+  const rows=$('rows');
+  const list=[...listCache].sort((a,b)=>(a.since||9999)-(b.since||9999));
+  $('count').textContent = list.length + (list.length===1?' member':' members') + ' · sorted by seniority';
+  if(!list.length){ rows.innerHTML='<div class="empty">No members yet. Click “+ Add Member” to start.</div>'; return; }
+  rows.innerHTML='';
+  list.forEach(m=>{
+    const yrs = m.since ? (CURRENT_YEAR - m.since) : null;
+    const row=document.createElement('div'); row.className='row';
+    const thumb = m.photo
+      ? `<img class="row__thumb" src="${esc(m.photo)}" alt="">`
+      : `<div class="row__thumb row__thumb--ph"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>`;
+    row.innerHTML = thumb +
+      `<div><div class="row__name">${esc(m.name)}</div><div class="row__meta">${esc(m.role||'—')} · joined ${esc(m.since||'?')}${yrs!=null?` · <span class="row__yrs">${yrs} ${yrs===1?'yr':'yrs'}</span>`:''}</div></div>`+
+      `<div class="row__actions"><button class="iconbtn" data-edit="${m.id}">Edit</button><button class="iconbtn danger" data-del="${m.id}">Delete</button></div>`;
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEditor(b.getAttribute('data-edit')));
+  rows.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeMember(b.getAttribute('data-del')));
+}
+
+/* ---------- Editor modal ---------- */
+function resetEditor(){
+  pendingBlob=null; pendingDataURL=null; sourceImage=null;
+  $('memberForm').reset();
+  $('m_id').value=''; $('m_years').value='';
+  $('cropControls').style.display='none';
+  $('preview').innerHTML='<div class="preview__ph"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>';
+  $('memberStatus').className='form__status';
+}
+function openEditor(id){
+  resetEditor();
+  if(id){
+    const m=listCache.find(x=>String(x.id)===String(id));
+    $('modalTitle').textContent='Edit Member';
+    $('m_id').value=m.id; $('m_name').value=m.name||''; $('m_role').value=m.role||'';
+    $('m_since').value=m.since||''; $('m_quote').value=m.quote||'';
+    updateYears();
+    if(m.photo){ $('preview').innerHTML=`<img src="${esc(m.photo)}" alt="">`; }
+  } else {
+    $('modalTitle').textContent='Add Member';
+  }
+  $('modal').classList.add('open');
+}
+function closeEditor(){ $('modal').classList.remove('open'); }
+$('addBtn').onclick=()=>openEditor(null);
+$('cancelBtn').onclick=closeEditor;
+$('modal').addEventListener('click',e=>{ if(e.target===$('modal')) closeEditor(); });
+$('m_since').addEventListener('input', updateYears);
+function updateYears(){ const v=parseInt($('m_since').value,10); $('m_years').value = v ? (CURRENT_YEAR - v)+' yrs' : ''; }
+
+/* ---------- Photo: load, crop to 4:5, preview ---------- */
+const drop=$('drop'), fileInput=$('fileInput');
+drop.onclick=()=>fileInput.click();
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag');}));
+drop.addEventListener('drop',e=>{ if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change',e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); });
+$('cropY').addEventListener('input', ()=>{ if(sourceImage) recrop(); });
+
+function handleFile(file){
+  if(!/^image\//.test(file.type)){ alert('Please choose an image file.'); return; }
+  const img=new Image();
+  img.onload=()=>{ sourceImage=img; $('cropControls').style.display='block'; recrop(); };
+  img.onerror=()=>alert('Could not read that image.');
+  img.src=URL.createObjectURL(file);
+}
+function recrop(){
+  const TW=800, TH=1000, ratio=TW/TH;
+  const sw=sourceImage.width, sh=sourceImage.height, sr=sw/sh;
+  let cw,ch,cx,cy;
+  const focus=parseInt($('cropY').value,10)/100;
+  if(sr>ratio){ ch=sh; cw=Math.round(sh*ratio); cx=Math.round((sw-cw)/2); cy=0; }
+  else { cw=sw; ch=Math.round(sw/ratio); cx=0; cy=Math.round((sh-ch)*focus); }
+  const c=document.createElement('canvas'); c.width=TW; c.height=TH;
+  c.getContext('2d').drawImage(sourceImage, cx,cy,cw,ch, 0,0,TW,TH);
+  pendingDataURL=c.toDataURL('image/jpeg',0.85);
+  $('preview').innerHTML=`<img src="${pendingDataURL}" alt="">`;
+  c.toBlob(b=>{ pendingBlob=b; }, 'image/jpeg', 0.85);
+}
+
+/* ---------- Save ---------- */
+function slug(s){ return (s||'member').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40); }
+
+$('memberForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const st=$('memberStatus'); st.className='form__status';
+  const card=$('memberForm'); card.classList.add('busy'); $('saveBtn').textContent='Saving…';
+  try{
+    const rec = {
+      name:$('m_name').value.trim(),
+      role:$('m_role').value.trim(),
+      since:parseInt($('m_since').value,10)||null,
+      quote:$('m_quote').value.trim()
+    };
+    const id=$('m_id').value;
+
+    if(LIVE){
+      // upload photo if a new one was chosen
+      if(pendingBlob){
+        const path = slug(rec.name)+'-'+Date.now()+'.jpg';
+        const up = await sb.storage.from(BUCKET).upload(path, pendingBlob, { contentType:'image/jpeg', upsert:true });
+        if(up.error) throw up.error;
+        rec.photo = sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+      }
+      let res;
+      if(id){ res = await sb.from('members').update(rec).eq('id', id).select(); }
+      else  { res = await sb.from('members').insert(rec).select(); }
+      if(res.error) throw res.error;
+      await loadMembers();
+    } else {
+      // demo: mutate local cache
+      if(pendingDataURL) rec.photo = pendingDataURL;
+      if(id){ const m=listCache.find(x=>String(x.id)===String(id)); Object.assign(m, rec); }
+      else { rec.id='d'+Date.now(); listCache.push(rec); }
+      renderRows();
+    }
+    closeEditor();
+  }catch(err){
+    st.textContent = 'Save failed: '+(err.message||err); st.className='form__status err show';
+  }finally{
+    card.classList.remove('busy'); $('saveBtn').textContent='Save Member';
+  }
+});
+
+/* ---------- Delete ---------- */
+async function removeMember(id){
+  const m=listCache.find(x=>String(x.id)===String(id));
+  if(!confirm('Remove '+(m?m.name:'this member')+' from the roster?')) return;
+  if(LIVE){
+    const { error } = await sb.from('members').delete().eq('id', id);
+    if(error){ alert('Delete failed: '+error.message); return; }
+    await loadMembers();
+  } else {
+    listCache = listCache.filter(x=>String(x.id)!==String(id)); renderRows();
+  }
+}
+
+init();
+</script>
+</body>
+</html>

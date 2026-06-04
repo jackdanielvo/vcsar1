@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Meet the Team · VCSAR Team 1</title>
+<meta name="description" content="Meet the volunteers of VCSAR Team 1 — the Fillmore Search & Rescue Team. Unpaid professionals who answer the call across Ventura County." />
+<meta name="theme-color" content="#181c11" />
+<link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html">
+      <img class="brand__badge" src="images/logo-patch.png" alt="VCSAR Team 1 — Fillmore Mountain Search & Rescue patch" />
+      <span><span class="brand__name">VCSAR Team 1</span><span class="brand__sub">Ventura County Sheriff's Office · Fillmore</span></span>
+    </a>
+    <nav class="nav__links" id="navlinks">
+      <a href="index.html">Home</a>
+      <a href="team.html" class="active">Our Team</a>
+      <a href="history.html">History</a>
+      <a href="join.html">Join</a>
+      <a href="donate.html">Donate</a>
+      <a class="btn btn--primary nav__cta" href="join.html">Answer the Call →</a>
+    </nav>
+    <button class="nav__toggle" id="navtoggle" aria-label="Menu">&#9776;</button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="phero">
+  <div class="phero__media">
+    <img src="images/team.jpg" alt="VCSAR Team 1 members"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+    <div class="ph" style="display:none"><span>PHOTO · images/team.jpg</span></div>
+  </div>
+  <div class="phero__scrim"></div>
+  <div class="wrap phero__inner">
+    <span class="hero__status"><span class="dot"></span> Unpaid professionals</span>
+    <h1>Meet the<br><span style="color:var(--orange)">team.</span></h1>
+    <p>We live full, regular lives — and answer the call when our community needs us most. Get an inside look at the people behind VCSAR Team 1, ordered by their years of service.</p>
+  </div>
+</section>
+
+<!-- ROSTER -->
+<section class="section">
+  <div class="topo"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="shead reveal" style="margin-bottom:30px">
+      <span class="eyebrow">The Roster</span>
+      <h2>Called to <span class="lead-accent">serve.</span></h2>
+    </div>
+
+    <div class="team reveal" id="teamgrid"></div>
+
+    <p style="color:var(--faint);font-size:13px;margin-top:26px;border-top:1px solid var(--line);padding-top:16px">
+      Manage this roster from the <a href="admin.html" style="color:var(--orange)">admin page</a> — add, edit, remove members and upload photos.
+      Until Supabase is connected, placeholder members are shown (see form-backend/TEAM-ADMIN-SETUP.txt).
+    </p>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="band band--img">
+  <div class="band__media">
+    <img src="images/training.jpg" alt="Training with the team"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+    <div class="ph" style="display:none"><span>PHOTO · images/training.jpg</span></div>
+  </div>
+  <div class="band__scrim"></div>
+  <div class="band__inner reveal">
+    <span class="eyebrow">Could This Be You?</span>
+    <h2>Add your name to the roster.</h2>
+    <p>Every member started exactly where you are now. If you're fit, dependable, and want to serve, we want to meet you.</p>
+    <a class="btn btn--primary" href="join.html">Start Your Application →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html" style="margin-bottom:18px">
+          <img class="brand__badge" src="images/logo-patch.png" alt="VCSAR Team 1 — Fillmore Mountain Search & Rescue patch" />
+          <span><span class="brand__name">VCSAR Team 1</span><span class="brand__sub">Ventura County Sheriff's Office · Fillmore</span></span>
+        </a>
+        <p>An all-volunteer search &amp; rescue team serving every acre of Ventura County since 1946. We train hard to stay ready.</p>
+      </div>
+      <div><h4>Explore</h4><a href="index.html#capabilities">What We Do</a><a href="team.html">Our Team</a><a href="history.html">History &amp; Gallery</a><a href="join.html">Join the Team</a></div>
+      <div><h4>Get Involved</h4><a href="join.html">Become a Volunteer</a><a href="donate.html">Make a Donation</a><a href="index.html#contact">Contact Us</a></div>
+      <div><h4>Contact</h4>
+        <p style="color:var(--muted);font-size:15px;margin:0 0 10px">524 Sespe Ave<br>Fillmore, CA 93015</p>
+        <a href="tel:8055242233">(805) 524-2233</a>
+        <a href="mailto:admin@vcsar1.org">admin@vcsar1.org</a>
+        <a href="https://www.facebook.com/vcsar/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.instagram.com/vcsar1/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 Ventura County Search &amp; Rescue · Team 1, Fillmore CA. All rights reserved.</span>
+      <span class="badge-line">In an emergency, call 911 · Dispatched via the Ventura County Sheriff's Office</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var t=document.getElementById('navtoggle'), l=document.getElementById('navlinks');
+  if(t) t.addEventListener('click',function(){ l.classList.toggle('open'); });
+
+  var CURRENT_YEAR = new Date().getFullYear();
+
+  /* Fallback roster — shown only if Supabase isn't configured yet (demo mode).
+     Once the admin page is connected, the live roster replaces this automatically. */
+  var FALLBACK = [
+    { name: "Member Name", role: "Team Captain",      since: 1998, photo: "images/team/member1.jpg", quote: "What SAR means to me…" },
+    { name: "Member Name", role: "Operations Lead",   since: 2004, photo: "images/team/member2.jpg" },
+    { name: "Member Name", role: "Medical Lead",      since: 2009, photo: "images/team/member3.jpg" },
+    { name: "Member Name", role: "Rope / Technical",  since: 2012, photo: "images/team/member4.jpg" },
+    { name: "Member Name", role: "Swift-Water Tech",  since: 2015, photo: "images/team/member5.jpg" },
+    { name: "Member Name", role: "Search Specialist", since: 2018, photo: "images/team/member6.jpg" },
+    { name: "Member Name", role: "Comms / Logistics", since: 2021, photo: "images/team/member7.jpg" },
+    { name: "Member Name", role: "Probationary",      since: 2024, photo: "images/team/member8.jpg" }
+  ];
+
+  var grid=document.getElementById('teamgrid');
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  function render(list){
+    grid.innerHTML='';
+    list.sort(function(a,b){ return (a.since||9999) - (b.since||9999); });
+    list.forEach(function(m){
+      var yrs = m.since ? (CURRENT_YEAR - m.since) : null;
+      var card=document.createElement('div'); card.className='member';
+      var photo=document.createElement('div'); photo.className='member__photo';
+      if(yrs!=null){ var b=document.createElement('span'); b.className='member__yrs'; b.textContent=yrs+(yrs===1?' yr':' yrs'); photo.appendChild(b); }
+      var img=document.createElement('img'); img.src=m.photo||''; img.alt=m.name||''; img.loading='lazy';
+      img.onerror=function(){
+        img.remove();
+        var ph=document.createElement('div'); ph.className='member__ph';
+        ph.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>';
+        photo.insertBefore(ph, photo.firstChild);
+      };
+      photo.insertBefore(img, photo.firstChild);
+      var body=document.createElement('div'); body.className='member__body';
+      body.innerHTML='<p class="member__name">'+esc(m.name)+'</p>'+
+                     (m.role?'<p class="member__role">'+esc(m.role)+'</p>':'')+
+                     (m.quote?'<p class="member__quote">&ldquo;'+esc(m.quote)+'&rdquo;</p>':'');
+      card.appendChild(photo); card.appendChild(body); grid.appendChild(card);
+    });
+  }
+
+  // Load live roster from Supabase if configured; otherwise show fallback (demo).
+  (function loadRoster(){
+    var url = window.SUPABASE_URL, key = window.SUPABASE_ANON;
+    if(url && key && window.supabase){
+      try{
+        var sb = window.supabase.createClient(url, key);
+        sb.from('members').select('*').then(function(res){
+          if(res.error || !res.data || !res.data.length){ render(FALLBACK); return; }
+          render(res.data);
+        }).catch(function(){ render(FALLBACK); });
+        return;
+      }catch(e){ /* fall through */ }
+    }
+    render(FALLBACK);
+  })();
+
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }); },{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+</body>
+</html>

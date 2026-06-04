@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ventura County Search &amp; Rescue · Team 1</title>
+<meta name="description" content="VCSAR Team 1 — all-volunteer search & rescue serving all 1,873 square miles of Ventura County. Trained for high-angle, swift-water, and wilderness rescue. Join the team or support the mission." />
+<meta name="theme-color" content="#181c11" />
+<link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<meta property="og:image" content="images/og-image.jpg" />
+<meta property="og:title" content="Ventura County Search & Rescue · Team 1" />
+<meta property="og:description" content="All-volunteer search & rescue serving every acre of Ventura County. We train hard to stay ready." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html">
+      <img class="brand__badge" src="images/logo-patch.png" alt="VCSAR Team 1 — Fillmore Mountain Search & Rescue patch" />
+      <span>
+        <span class="brand__name">VCSAR Team 1</span>
+        <span class="brand__sub">Ventura County Sheriff's Office · Fillmore</span>
+      </span>
+    </a>
+    <nav class="nav__links" id="navlinks">
+      <a href="index.html" class="active">Home</a>
+      <a href="team.html">Our Team</a>
+      <a href="history.html">History</a>
+      <a href="join.html">Join</a>
+      <a href="donate.html">Donate</a>
+      <a class="btn btn--primary nav__cta" href="join.html">Answer the Call →</a>
+    </nav>
+    <button class="nav__toggle" id="navtoggle" aria-label="Menu">&#9776;</button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero__media">
+    <!-- Drop your photo at images/hero.jpg (wide, ~1920×1080). Placeholder shows until then. -->
+    <img src="images/hero.jpg" alt="VCSAR Team 1 on a rescue operation"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+    <div class="ph" style="display:none"><span>HERO PHOTO · add images/hero.jpg (1920×1080)</span></div>
+  </div>
+  <div class="hero__scrim"></div>
+  <div class="hero__inner">
+    <span class="hero__status"><span class="dot"></span> On call · 24 / 7 / 365</span>
+    <h1>We train hard<br><span class="accent">to stay ready.</span></h1>
+    <p class="hero__lead">VCSAR Team 1 is an all-volunteer branch of the Ventura County Sheriff's Office — answering the call across every ridgeline, river, and coastline in the county. When someone is lost or hurt in the backcountry, we go.</p>
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="join.html">Become a Volunteer →</a>
+      <a class="btn btn--ghost" href="donate.html">Support the Team</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<div class="stats">
+  <div class="stats__grid">
+    <div class="stat"><div class="stat__n">1,873</div><div class="stat__l">Square miles covered</div></div>
+    <div class="stat"><div class="stat__n">43</div><div class="stat__l">Miles of coastline</div></div>
+    <div class="stat"><div class="stat__n">100%</div><div class="stat__l">Volunteer team</div></div>
+    <div class="stat"><div class="stat__n">24/7</div><div class="stat__l">Ready to respond</div></div>
+  </div>
+</div>
+
+<!-- ============ MISSION ============ -->
+<section class="section" id="mission">
+  <div class="topo"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow">Called to Serve</span>
+        <h2 style="font-size:clamp(34px,5.5vw,64px);font-weight:700;line-height:.98;margin:16px 0 0">We often meet people<br><span class="lead-accent">on their worst day.</span></h2>
+        <p style="color:var(--muted);font-size:18px;margin-top:24px">Our primary goal is simple and absolute: save lives by finding people in distress and getting them to safety. We're unpaid professionals who live full, regular lives — and answer the call when our community needs us most.</p>
+        <p style="color:var(--muted);font-size:18px">From high-angle rock rescues to swift-water emergencies, we use specialized equipment and hard-earned skill to bring people home. We work shoulder-to-shoulder with law enforcement, fire, and medical teams to run a rescue from first call to safe return.</p>
+        <a class="btn btn--ghost" href="join.html" style="margin-top:14px">See how to join →</a>
+      </div>
+      <div class="split__media reveal">
+        <div class="frame">
+          <img src="images/mission.jpg" alt="A VCSAR rescue in progress"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+          <div class="ph" style="display:none"><span>PHOTO · add images/mission.jpg (vertical 4:5)</span></div>
+          <span class="frame__tag">Ventura County · Backcountry</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAPABILITIES ============ -->
+<section class="section section--tight" id="capabilities" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="eyebrow">What We Do</span>
+      <h2>One team. <span class="lead-accent">Every terrain.</span></h2>
+      <p>The team is trained and equipped to handle the full range of wilderness and technical emergencies — and to search when someone goes missing.</p>
+    </div>
+    <div class="caps">
+      <div class="cap reveal">
+        <span class="cap__num">01</span>
+        <svg class="cap__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v6m0 0 4 4m-4-4-4 4m-2 8 6-6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>High-Angle Rescue</h3>
+        <p>Rope systems and technical climbing skills to reach and recover people from cliffs, crags, and steep terrain.</p>
+      </div>
+      <div class="cap reveal">
+        <span class="cap__num">02</span>
+        <svg class="cap__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 19c2-2 4-2 6 0s4 2 6 0 4-2 6 0" stroke-linecap="round"/><path d="M12 3l2 6h-4l2-6z"/></svg>
+        <h3>Swift-Water Rescue</h3>
+        <p>Trained for fast-moving water — flash floods, river rescues, and water emergencies along county waterways.</p>
+      </div>
+      <div class="cap reveal">
+        <span class="cap__num">03</span>
+        <svg class="cap__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+        <h3>Search Operations</h3>
+        <p>Finding overdue hikers, mountain bikers, missing children, and lost hunters through coordinated, methodical search.</p>
+      </div>
+      <div class="cap reveal">
+        <span class="cap__num">04</span>
+        <svg class="cap__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.4-7-10a7 7 0 0 1 14 0c0 5.6-7 10-7 10z"/><path d="M12 8v6m-3-3h6" stroke-linecap="round"/></svg>
+        <h3>Wilderness Medicine</h3>
+        <p>First aid and on-site stabilization of injuries until the patient can be moved to higher medical care.</p>
+      </div>
+      <div class="cap reveal">
+        <span class="cap__num">05</span>
+        <svg class="cap__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v6l9 4 9-4V7" stroke-linejoin="round"/></svg>
+        <h3>Car-Over-the-Side</h3>
+        <p>Vehicle-recovery and patient extraction on the steep embankments and canyon roads that define our county.</p>
+      </div>
+      <div class="cap reveal">
+        <span class="cap__num">06</span>
+        <svg class="cap__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18" /></svg>
+        <h3>Incident Command</h3>
+        <p>Organizing complex multi-agency operations — command, communications, and logistics under pressure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RECRUIT BAND ============ -->
+<section class="band band--img">
+  <div class="band__media">
+    <img src="images/team.jpg" alt="The VCSAR Team 1 members"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+    <div class="ph" style="display:none"><span>PHOTO · add images/team.jpg (1920×900)</span></div>
+  </div>
+  <div class="band__scrim"></div>
+  <div class="band__inner reveal">
+    <span class="eyebrow">Life as a SAR Teammate</span>
+    <h2>Answer the call.</h2>
+    <p>SAR members are unpaid professionals who bring skill, grit, and heart to every callout. Many arrive with backcountry experience — but the team trains constantly so every member is proficient across the whole rescue domain. If you're fit, dependable, and want to serve, we want to meet you.</p>
+    <a class="btn btn--primary" href="join.html">Start Your Application →</a>
+  </div>
+</section>
+
+<!-- ============ TEAM LIFE / VALUES ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="eyebrow">Why Members Stay</span>
+      <h2>Membership that <span class="lead-accent">means something.</span></h2>
+    </div>
+    <div class="values">
+      <div class="value reveal"><span class="value__k">01</span><div><h3>Help Your Community</h3><p>Be a vital part of your community's response to people in distress, disasters, and the needs of law enforcement.</p></div></div>
+      <div class="value reveal"><span class="value__k">02</span><div><h3>Real Friendships</h3><p>Working shoulder-to-shoulder builds bonds that extend well beyond the meetings, trainings, and callouts.</p></div></div>
+      <div class="value reveal"><span class="value__k">03</span><div><h3>Training &amp; Development</h3><p>Learn technical rescue, navigation, medicine, and incident command — together, and for life.</p></div></div>
+      <div class="value reveal"><span class="value__k">04</span><div><h3>Called to Serve</h3><p>Few things compare to the feeling of bringing someone home safe to the people who love them.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DONATE TEASER ============ -->
+<section class="section section--tight" style="background:var(--bg-2);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="pledge reveal">
+      <div class="pledge__big">100%</div>
+      <div>
+        <h3 style="margin:0 0 8px;font-size:26px">Every dollar reaches the mission.</h3>
+        <p>VCSAR1 runs on private donations. The cutting-edge equipment we need to rescue people in danger is expensive — and unlike many charities, <strong>100% of every dollar donated</strong> goes directly to the team, its gear, and its mission. Any amount helps us stay ready.</p>
+        <a class="btn btn--primary" href="donate.html" style="margin-top:20px">Support the Team →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section" id="contact">
+  <div class="topo"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow">Get in Touch</span>
+        <h2 style="font-size:clamp(32px,5vw,56px);font-weight:700;margin:16px 0 0">Reach the team.</h2>
+        <p style="color:var(--muted);font-size:18px;margin-top:20px">Interested in joining, supporting, or have a question about the team? Fill out the form and a SAR representative will get back to you.</p>
+        <p style="color:var(--muted);font-size:15px;margin-top:28px">For an emergency, always call <strong style="color:var(--text)">911</strong>.<br>VCSAR Team 1 is dispatched through the Ventura County Sheriff's Office.</p>
+      </div>
+      <form class="form reveal" onsubmit="event.preventDefault(); this.reset(); alert('Thank you — a SAR representative will get back to you.');">
+        <div class="field--row">
+          <div class="field"><label>First name</label><input type="text" required /></div>
+          <div class="field"><label>Last name</label><input type="text" required /></div>
+        </div>
+        <div class="field"><label>Email</label><input type="email" required /></div>
+        <div class="field"><label>I'm reaching out about</label>
+          <select><option>Joining the team</option><option>Making a donation</option><option>General question</option><option>Media / press</option></select>
+        </div>
+        <div class="field"><label>Message</label><textarea required></textarea></div>
+        <button class="btn btn--primary btn--block" type="submit">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html" style="margin-bottom:18px">
+          <img class="brand__badge" src="images/logo-patch.png" alt="VCSAR Team 1 — Fillmore Mountain Search & Rescue patch" />
+          <span><span class="brand__name">VCSAR Team 1</span><span class="brand__sub">Ventura County Sheriff's Office · Fillmore</span></span>
+        </a>
+        <p>An all-volunteer search &amp; rescue team serving every acre of Ventura County since 1946. We train hard to stay ready.</p>
+      </div>
+      <div><h4>Explore</h4><a href="index.html#capabilities">What We Do</a><a href="team.html">Our Team</a><a href="history.html">History &amp; Gallery</a><a href="join.html">Join the Team</a></div>
+      <div><h4>Get Involved</h4><a href="join.html">Become a Volunteer</a><a href="donate.html">Make a Donation</a><a href="index.html#contact">Contact Us</a></div>
+      <div><h4>Contact</h4>
+        <p style="color:var(--muted);font-size:15px;margin:0 0 10px">524 Sespe Ave<br>Fillmore, CA 93015</p>
+        <a href="tel:8055242233">(805) 524-2233</a>
+        <a href="mailto:admin@vcsar1.org">admin@vcsar1.org</a>
+        <a href="https://www.facebook.com/vcsar/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.instagram.com/vcsar1/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 Ventura County Search &amp; Rescue · Team 1, Fillmore CA. All rights reserved.</span>
+      <span class="badge-line">In an emergency, call 911 · Dispatched via the Ventura County Sheriff's Office</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  var t = document.getElementById('navtoggle'), l = document.getElementById('navlinks');
+  if (t) t.addEventListener('click', function(){ l.classList.toggle('open'); });
+  // Scroll reveal
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+VCSAR Team 1 — Website  ·  START HERE
+=====================================
+
+This folder is the complete redesigned website (static HTML/CSS/JS — deploys
+anywhere, including Netlify).
+
+PAGES
+  index.html .... Home
+  join.html ..... Joining + full application form
+  donate.html ... Donate
+  team.html ..... Meet the Team (live roster from Supabase)
+  history.html .. History & photo gallery
+  admin.html .... Private roster manager (add/edit/remove members + photos)
+  styles.css .... Shared styling
+  supabase-config.js ... your Supabase keys (team roster backend)
+  images/ ....... Photos (+ images/team/ for member headshots)
+  form-backend/ . Setup guides + the Google Apps Script for the form
+
+------------------------------------------------------------------
+GO-LIVE CHECKLIST
+------------------------------------------------------------------
+[ ] 1. APPLICATION FORM  (not connected yet — currently demo mode)
+       The form won't record applications until you add your endpoint.
+       Follow form-backend/APPLICATION-FORM-SETUP.txt, then paste the URL into
+       join.html:   var APPS_SCRIPT_URL = "https://script.google.com/.../exec";
+
+[x] 2. TEAM ROSTER BACKEND  (Supabase connected)
+       supabase-config.js has your project URL + publishable key.
+       - Add your real team in admin.html (sign in, "+ Add Member", upload photos).
+       - The Team page updates instantly; no redeploy needed.
+       - Reminder: only the PUBLISHABLE key ("sb_publishable_...") belongs here.
+         Never add the secret key.
+
+[ ] 3. PHOTOS
+       - Swap any of the section photos in images/ if you like (see images/README.txt).
+       - Member headshots are uploaded through admin.html (auto-resized).
+
+[ ] 4. HISTORY GALLERY
+       The gallery + historic photos currently load from your existing
+       vcsar1.org (WordPress). They work as-is, but if you retire WordPress on
+       that domain, download those images into images/ and I'll re-point them.
+
+[ ] 5. PROTECT THE ADMIN PAGE (optional but recommended)
+       admin.html already requires a Supabase login and is set to "noindex."
+       For an extra layer on Netlify: Site settings ▸ Password protection,
+       or rename admin.html to a private URL.
+
+[ ] 6. DEPLOY
+       Netlify: drag this folder onto https://app.netlify.com/drop , or connect
+       a Git repo. Point your domain (vcsar1.org) at the new site when ready.
+
+------------------------------------------------------------------
+HOUSEKEEPING
+------------------------------------------------------------------
+- images/ also contains a few unused extras (the chopper background video and a
+  couple of alternate shots). They don't affect the site; the chopper clip is
+  saved for the video section we can add later. You can delete unused files to
+  keep the deploy lean (the .mp4 is ~58 MB).
+- Safe to ignore/delete any .DS_Store files (macOS folder metadata).

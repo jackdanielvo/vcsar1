@@ -1,0 +1,12 @@
+# Netlify configuration — static site, no build step.
+# The site files live at the repo root, so the publish directory is ".".
+
+[build]
+  publish = "."
+  command = ""
+
+# Send the admin page's robots header (already noindex in HTML too).
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"

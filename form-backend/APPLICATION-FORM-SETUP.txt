@@ -1,0 +1,62 @@
+VCSAR Team 1 — Application Form Setup
+=====================================
+
+The Join page form saves each application as a row in a Google Sheet you own,
+using a small Google Apps Script. No plugins, no fees, no third-party branding.
+One-time setup, ~10 minutes.
+
+----------------------------------------------------------------
+STEP 1 — Create the spreadsheet
+----------------------------------------------------------------
+1. Go to https://sheets.google.com and create a new blank spreadsheet.
+2. Name it something like "VCSAR Applications".
+   (You don't need to add headers — the script adds them automatically.)
+
+----------------------------------------------------------------
+STEP 2 — Add the script
+----------------------------------------------------------------
+3. In that spreadsheet, click  Extensions ▸ Apps Script.
+4. Delete any sample code in the editor.
+5. Open the file  Code.gs  (in this folder), copy ALL of it, and paste it in.
+6. (Optional) Change NOTIFY_EMAIL at the top if you want new-application
+   emails sent somewhere other than admin@vcsar1.org (or set it to ""  for none).
+7. Click the save icon.
+
+----------------------------------------------------------------
+STEP 3 — Deploy it as a Web App
+----------------------------------------------------------------
+8. Click  Deploy ▸ New deployment.
+9. Click the gear icon ▸ choose  Web app.
+10. Set:
+       Description:   VCSAR application endpoint
+       Execute as:    Me (your account)
+       Who has access: Anyone
+11. Click  Deploy.  Approve the permissions when prompted
+    (Google will warn it's an unverified app — that's normal for your own script;
+     choose Advanced ▸ "Go to ... (unsafe)" ▸ Allow).
+12. Copy the  Web app URL.  It looks like:
+       https://script.google.com/macros/s/AKfycb..................../exec
+
+----------------------------------------------------------------
+STEP 4 — Connect the website
+----------------------------------------------------------------
+13. Open  join.html  in a text editor.
+14. Near the bottom, find this line:
+        var APPS_SCRIPT_URL = "";
+15. Paste your Web app URL between the quotes, e.g.:
+        var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec";
+16. Save. Done!
+
+Submit a test application from the Join page — a new row should appear in your
+spreadsheet within a second or two (and an email if you left NOTIFY_EMAIL set).
+
+----------------------------------------------------------------
+NOTES
+----------------------------------------------------------------
+- The form fields map 1:1 to spreadsheet columns (see FIELDS in Code.gs).
+  If you add/remove a question on the form, update FIELDS and HEADERS to match.
+- If you change the script later, use  Deploy ▸ Manage deployments ▸ Edit ▸
+  "New version" so the same URL keeps working (no need to update the site).
+- Until a URL is added, the form runs in DEMO mode: it validates and shows a
+  success message but does not send data anywhere.
+- A hidden "company" honeypot field quietly blocks most spam bots.
