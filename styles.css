@@ -172,6 +172,14 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
   letter-spacing: -.005em;
 }
 .hero h1 .accent { color: var(--orange); display: block; }
+.hero__org {
+  margin: 0 0 6px;
+  font-family: "Oswald", sans-serif; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .16em; line-height: 1.1;
+  font-size: clamp(15px, 2.1vw, 25px);
+  color: #e9eee1;
+}
+.hero__org .orgteam { color: var(--orange); }
 .hero__station {
   display: flex; align-items: center; gap: 12px;
   margin: 20px 0 0;
