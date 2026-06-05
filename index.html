@@ -66,10 +66,10 @@
 <!-- ============ STATS ============ -->
 <div class="stats">
   <div class="stats__grid">
-    <div class="stat"><div class="stat__n">1,873</div><div class="stat__l">Square miles covered</div></div>
-    <div class="stat"><div class="stat__n">43</div><div class="stat__l">Miles of coastline</div></div>
-    <div class="stat"><div class="stat__n">100%</div><div class="stat__l">Volunteer team</div></div>
-    <div class="stat"><div class="stat__n">24/7</div><div class="stat__l">Ready to respond</div></div>
+    <div class="stat"><div class="stat__n" data-target="1873" data-comma="1">1,873</div><div class="stat__l">Square miles covered</div></div>
+    <div class="stat"><div class="stat__n" data-target="43">43</div><div class="stat__l">Miles of coastline</div></div>
+    <div class="stat"><div class="stat__n" data-target="100" data-suffix="%">100%</div><div class="stat__l">Volunteer team</div></div>
+    <div class="stat"><div class="stat__n" data-target="24" data-suffix="/7">24/7</div><div class="stat__l">Ready to respond</div></div>
   </div>
 </div>
 
@@ -256,6 +256,38 @@
     es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: .12 });
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  // ---- Animated stat counters ----
+  (function(){
+    var nums = Array.prototype.slice.call(document.querySelectorAll('.stat__n[data-target]'));
+    if(!nums.length) return;
+    function fmt(el, v){
+      var dec = parseInt(el.dataset.decimals || '0', 10);
+      var n = dec ? v.toFixed(dec) : String(Math.round(v));
+      if(el.dataset.comma === '1') n = Math.round(v).toLocaleString('en-US');
+      return (el.dataset.prefix || '') + n + (el.dataset.suffix || '');
+    }
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Start each at zero (only when motion is allowed)
+    if(!reduce) nums.forEach(function(el){ el.textContent = fmt(el, 0); });
+    function run(el){
+      if(reduce){ el.textContent = fmt(el, parseFloat(el.dataset.target)); return; }
+      var target = parseFloat(el.dataset.target), dur = 1700, t0 = null;
+      function tick(now){
+        if(t0 === null) t0 = now;
+        var p = Math.min(1, (now - t0) / dur);
+        var eased = 1 - Math.pow(1 - p, 3);          // easeOutCubic
+        el.textContent = fmt(el, target * eased);
+        if(p < 1) requestAnimationFrame(tick);
+        else el.textContent = fmt(el, target);
+      }
+      requestAnimationFrame(tick);
+    }
+    var so = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ run(e.target); so.unobserve(e.target); } });
+    }, { threshold: .6 });
+    nums.forEach(function(el){ so.observe(el); });
+  })();
 </script>
 </body>
 </html>
