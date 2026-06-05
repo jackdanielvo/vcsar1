@@ -270,7 +270,9 @@
       status.className = 'form__status err show';
       var firstEl = form.querySelector('input[name="' + missing[0].name + '"]');
       var fld = firstEl && firstEl.closest('.field');
-      if (fld) { fld.classList.add('field--err'); fld.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      if (fld) fld.classList.add('field--err');
+      // Keep the message where the user just clicked (don't scroll away from it).
+      status.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
