@@ -368,6 +368,8 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
 .footer a { color: #c4ccd4; display: block; padding: 6px 0; font-size: 15px; transition: color .2s; }
 .footer a:hover { color: var(--orange); }
 .footer__brand p { color: var(--muted); max-width: 34ch; font-size: 15px; }
+.social-ico { display: inline-flex; align-items: center; padding: 8px 0 0; }
+.social-ico svg { display: block; }
 .footer__bar { border-top: 1px solid var(--line); margin-top: 48px; padding-top: 26px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--faint); font-size: 13px; }
 .footer__bar .badge-line { display: flex; align-items: center; gap: 10px; }
 
