@@ -234,14 +234,21 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
 .caps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--line); border: 1px solid var(--line); }
 .cap {
   background: var(--bg-2); padding: 38px 32px;
-  transition: background .3s, transform .3s;
-  position: relative;
+  position: relative; overflow: hidden;
 }
-.cap:hover { background: var(--surface); }
-.cap__ico { width: 46px; height: 46px; color: var(--orange); margin-bottom: 22px; }
+.cap::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange-2));
+  transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease);
+}
+.cap:hover { background: var(--surface); transform: translateY(-8px); z-index: 1; box-shadow: 0 26px 52px -24px rgba(0,0,0,.75); }
+.cap:hover::after { transform: scaleX(1); }
+.cap__ico { width: 46px; height: 46px; color: var(--orange); margin-bottom: 22px; transition: transform .45s var(--ease), filter .45s var(--ease); }
+.cap:hover .cap__ico { transform: scale(1.12) translateY(-2px); filter: drop-shadow(0 0 16px rgba(255,90,31,.5)); }
 .cap h3 { font-size: 22px; margin: 0 0 10px; font-weight: 600; letter-spacing: .02em; }
 .cap p { color: var(--muted); margin: 0; font-size: 15.5px; line-height: 1.6; }
-.cap__num { position: absolute; top: 26px; right: 28px; font-family: "Oswald",sans-serif; color: var(--line); font-size: 30px; font-weight: 700; }
+.cap__num { position: absolute; top: 26px; right: 28px; font-family: "Oswald",sans-serif; color: var(--line); font-size: 30px; font-weight: 700; transition: color .4s var(--ease), transform .45s var(--ease); transform-origin: right top; }
+.cap:hover .cap__num { color: var(--orange); transform: scale(1.18); }
 
 /* ---- Band (CTA) ----------------------------------------- */
 .band { position: relative; overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -487,7 +494,14 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
               background .4s var(--ease), box-shadow .4s var(--ease);
 }
 .values .value:hover { transform: translateY(-8px); }
+
+.cap {
+  transition: background .4s var(--ease), transform .5s var(--ease), box-shadow .4s var(--ease);
+}
+.caps .cap:hover { transform: translateY(-8px); }
+
 @media (prefers-reduced-motion: reduce) {
-  .value, .value__k, .value::after { transition: none; }
-  .values .value:hover { transform: none; }
+  .value, .value__k, .value::after,
+  .cap, .cap__ico, .cap__num, .cap::after { transition: none; }
+  .values .value:hover, .caps .cap:hover { transform: none; }
 }
