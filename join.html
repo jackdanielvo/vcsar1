@@ -256,28 +256,47 @@
     var btn = document.getElementById('appsubmit');
     status.className = 'form__status';
 
-    // The choice-chip radios are visually hidden, so the native validation
-    // popup can't show on them. Validate those groups here with a clear message.
-    var radioGroups = [
-      { name: 'age',               label: 'whether you’re at least 21' },
-      { name: 'employer_callouts', label: 'whether your employer allows callouts' },
-      { name: 'wilderness',        label: 'your wilderness experience level' }
+    // Validate every required field ourselves and show one clear, visible message
+    // (some fields — the choice chips — are hidden, and native popups can be missed).
+    var required = [
+      { name:'first_name', label:'First name' },
+      { name:'last_name',  label:'Last name' },
+      { name:'email',      label:'Email' },
+      { name:'phone',      label:'Phone number' },
+      { name:'street',     label:'Street address' },
+      { name:'city',       label:'City' },
+      { name:'state',      label:'State' },
+      { name:'zip',        label:'ZIP code' },
+      { name:'employer',   label:'Employer (name & city)' },
+      { name:'age',                label:'Are you at least 21?', radio:true },
+      { name:'employer_callouts',  label:'Will your employer allow callouts?', radio:true },
+      { name:'wilderness',         label:'Wilderness experience level', radio:true },
+      { name:'why_join',   label:'Why you want to join' },
+      { name:'signature',  label:'Signature' },
+      { name:'app_date',   label:'Date' }
     ];
     Array.prototype.forEach.call(form.querySelectorAll('.field--err'), function(f){ f.classList.remove('field--err'); });
-    var missing = radioGroups.filter(function(g){ return !form.querySelector('input[name="' + g.name + '"]:checked'); });
+    var missing = [];
+    required.forEach(function(r){
+      var bad;
+      if (r.radio) {
+        bad = !form.querySelector('input[name="' + r.name + '"]:checked');
+      } else {
+        var el = form.querySelector('[name="' + r.name + '"]');
+        bad = !el || el.value.trim() === '' || (el.type === 'email' && !el.checkValidity());
+      }
+      if (bad) {
+        missing.push(r.label);
+        var any = form.querySelector('[name="' + r.name + '"]');
+        var fld = any && any.closest('.field');
+        if (fld) fld.classList.add('field--err');
+      }
+    });
     if (missing.length) {
-      status.textContent = 'Please answer: ' + missing.map(function(m){ return m.label; }).join('; ') + '.';
+      status.innerHTML = '<strong>Please complete the highlighted field' + (missing.length > 1 ? 's' : '') +
+        ':</strong> ' + missing.join(', ') + '.';
       status.className = 'form__status err show';
-      var firstEl = form.querySelector('input[name="' + missing[0].name + '"]');
-      var fld = firstEl && firstEl.closest('.field');
-      if (fld) fld.classList.add('field--err');
-      // Keep the message where the user just clicked (don't scroll away from it).
       status.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
       return;
     }
     if (form.company && form.company.value) return; // honeypot tripped
