@@ -55,6 +55,12 @@ dl "$BASE/2024/12/Scan10052_onmountain.jpg"          "Scan10052_onmountain.jpg"
 dl "$BASE/2025/01/SARwebsite_History-jeep-1.jpg"     "SARwebsite_History-jeep-1.jpg"
 dl "$BASE/2025/01/SARwebsite_History-hd01-1-2.jpg"   "SARwebsite_History-hd01-1-2.jpg"
 
+# Honor Roll page photos
+dl "$BASE/2025/01/SARwebsite_HonorRoll-hd01-1.jpg"            "SARwebsite_HonorRoll-hd01-1.jpg"
+dl "$BASE/2025/01/SARwebsite_HonorRoll-Jeff-Dye-846x1024.jpg" "SARwebsite_HonorRoll-Jeff-Dye-846x1024.jpg"
+dl "$BASE/2025/01/SARwebsite_HonorRoll-1.jpg"                 "SARwebsite_HonorRoll-1.jpg"
+dl "$BASE/2025/01/joe-martinez-2-1024x905.jpg"               "joe-martinez-2-1024x905.jpg"
+
 echo ""
 echo "Finished:  $ok downloaded, $fail failed."
 echo "The History page now loads these from $DEST — no WordPress needed."
