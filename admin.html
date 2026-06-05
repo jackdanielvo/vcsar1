@@ -113,6 +113,7 @@
       <div class="photoedit">
         <div>
           <div class="preview" id="preview"><div class="preview__ph"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div></div>
+          <button type="button" class="iconbtn danger" id="removePhotoBtn" style="display:none;width:100%;margin-top:10px">Remove photo</button>
         </div>
         <div>
           <div class="drop" id="drop">Click or drop a photo here<br><span style="font-size:12px;color:var(--faint)">JPG/PNG · resized to a 4:5 portrait automatically</span></div>
@@ -154,6 +155,20 @@ let listCache = [];
 let pendingBlob = null;     // resized photo Blob awaiting upload
 let pendingDataURL = null;  // preview
 let sourceImage = null;     // loaded Image for re-cropping
+let clearPhoto = false;     // user chose to remove the existing photo
+let editingOrigPhoto = '';  // the photo URL the member had when the editor opened
+
+// Best-effort delete of a photo file from Supabase storage (ignores failures).
+async function removeStoragePhoto(url){
+  try{
+    if(!LIVE || !url) return;
+    const marker = '/'+BUCKET+'/';
+    const i = url.indexOf(marker);
+    if(i < 0) return;
+    const path = decodeURIComponent(url.slice(i + marker.length));
+    await sb.storage.from(BUCKET).remove([path]);
+  }catch(e){ /* leave orphan file; harmless */ }
+}
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -226,12 +241,16 @@ function renderRows(){
 }
 
 /* ---------- Editor modal ---------- */
+const PH_SVG='<div class="preview__ph"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>';
+function showRemoveBtn(on){ $('removePhotoBtn').style.display = on ? 'block' : 'none'; }
+
 function resetEditor(){
-  pendingBlob=null; pendingDataURL=null; sourceImage=null;
+  pendingBlob=null; pendingDataURL=null; sourceImage=null; clearPhoto=false; editingOrigPhoto='';
   $('memberForm').reset();
   $('m_id').value=''; $('m_years').value='';
   $('cropControls').style.display='none';
-  $('preview').innerHTML='<div class="preview__ph"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>';
+  $('preview').innerHTML=PH_SVG;
+  showRemoveBtn(false);
   $('memberStatus').className='form__status';
 }
 function openEditor(id){
@@ -242,12 +261,24 @@ function openEditor(id){
     $('m_id').value=m.id; $('m_name').value=m.name||''; $('m_role').value=m.role||'';
     $('m_since').value=m.since||''; $('m_quote').value=m.quote||'';
     updateYears();
-    if(m.photo){ $('preview').innerHTML=`<img src="${esc(m.photo)}" alt="">`; }
+    editingOrigPhoto = m.photo || '';
+    if(m.photo){ $('preview').innerHTML=`<img src="${esc(m.photo)}" alt="">`; showRemoveBtn(true); }
   } else {
     $('modalTitle').textContent='Add Member';
   }
   $('modal').classList.add('open');
 }
+
+// Remove-photo button: clear preview, mark for removal on save.
+$('removePhotoBtn').addEventListener('click', ()=>{
+  pendingBlob=null; pendingDataURL=null; sourceImage=null;
+  clearPhoto=true;
+  $('cropControls').style.display='none';
+  $('cropY').value=50;
+  $('fileInput').value='';
+  $('preview').innerHTML=PH_SVG;
+  showRemoveBtn(false);
+});
 function closeEditor(){ $('modal').classList.remove('open'); }
 $('addBtn').onclick=()=>openEditor(null);
 $('cancelBtn').onclick=closeEditor;
@@ -267,7 +298,7 @@ $('cropY').addEventListener('input', ()=>{ if(sourceImage) recrop(); });
 function handleFile(file){
   if(!/^image\//.test(file.type)){ alert('Please choose an image file.'); return; }
   const img=new Image();
-  img.onload=()=>{ sourceImage=img; $('cropControls').style.display='block'; recrop(); };
+  img.onload=()=>{ sourceImage=img; clearPhoto=false; $('cropControls').style.display='block'; showRemoveBtn(true); recrop(); };
   img.onerror=()=>alert('Could not read that image.');
   img.src=URL.createObjectURL(file);
 }
@@ -302,21 +333,28 @@ $('memberForm').addEventListener('submit', async e=>{
     const id=$('m_id').value;
 
     if(LIVE){
-      // upload photo if a new one was chosen
+      // upload a new photo, or clear the existing one
       if(pendingBlob){
         const path = slug(rec.name)+'-'+Date.now()+'.jpg';
         const up = await sb.storage.from(BUCKET).upload(path, pendingBlob, { contentType:'image/jpeg', upsert:true });
         if(up.error) throw up.error;
         rec.photo = sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+      } else if(clearPhoto){
+        rec.photo = '';
       }
       let res;
       if(id){ res = await sb.from('members').update(rec).eq('id', id).select(); }
       else  { res = await sb.from('members').insert(rec).select(); }
       if(res.error) throw res.error;
+      // delete the old image file if it was replaced or removed
+      if(editingOrigPhoto && (pendingBlob || clearPhoto) && editingOrigPhoto !== rec.photo){
+        removeStoragePhoto(editingOrigPhoto);
+      }
       await loadMembers();
     } else {
       // demo: mutate local cache
       if(pendingDataURL) rec.photo = pendingDataURL;
+      else if(clearPhoto) rec.photo = '';
       if(id){ const m=listCache.find(x=>String(x.id)===String(id)); Object.assign(m, rec); }
       else { rec.id='d'+Date.now(); listCache.push(rec); }
       renderRows();
@@ -336,6 +374,7 @@ async function removeMember(id){
   if(LIVE){
     const { error } = await sb.from('members').delete().eq('id', id);
     if(error){ alert('Delete failed: '+error.message); return; }
+    if(m && m.photo) removeStoragePhoto(m.photo);
     await loadMembers();
   } else {
     listCache = listCache.filter(x=>String(x.id)!==String(id)); renderRows();
