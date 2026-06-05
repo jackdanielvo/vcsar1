@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Training · VCSAR Team 1</title>
+<meta name="description" content="SAR readiness depends on constant skills refinement. Explore the skills VCSAR Team 1 trains — rope systems, swift-water, navigation, medical, avalanche, and more." />
+<meta name="theme-color" content="#181c11" />
+<link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html">
+      <img class="brand__badge" src="images/logo-patch.png" alt="VCSAR Team 1 — Fillmore Mountain Search & Rescue patch" />
+      <span><span class="brand__name">VCSAR Team 1</span><span class="brand__sub">Ventura County Sheriff's Office · Fillmore</span></span>
+    </a>
+    <nav class="nav__links" id="navlinks">
+      <a href="index.html">Home</a>
+      <a href="team.html">Our Team</a>
+      <a href="history.html">History</a>
+      <a href="honor.html">Honor Roll</a>
+      <a href="join.html">Join</a>
+      <a href="donate.html">Donate</a>
+      <a class="btn btn--primary nav__cta" href="join.html">Answer the Call →</a>
+    </nav>
+    <button class="nav__toggle" id="navtoggle" aria-label="Menu">&#9776;</button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="phero">
+  <div class="phero__media">
+    <img src="images/gallery/SARwebsite_Training-hd01-1.jpg" alt="VCSAR Team 1 training"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />
+    <div class="ph" style="display:none"><span>PHOTO · training banner</span></div>
+  </div>
+  <div class="phero__scrim"></div>
+  <div class="wrap phero__inner">
+    <span class="eyebrow">VCSAR1</span>
+    <h1>We train<br><span style="color:var(--orange)">hard.</span></h1>
+    <p>SAR readiness depends on our team's commitment to constant skills refinement. Prospective members bring many of these skills with them, but all of us keep working on the abilities below.</p>
+  </div>
+</section>
+
+<!-- OVERVIEW + VIDEO -->
+<section class="section">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow">An Inside Look</span>
+        <h2 style="font-size:clamp(30px,4.5vw,52px);font-weight:700;line-height:1;margin:16px 0 0">Skills that <span class="lead-accent">save lives.</span></h2>
+        <p style="color:var(--muted);font-size:18px;margin-top:20px">Search and rescue is demanding, technical work. From high-angle rope rescue to swift-water, navigation, and wilderness medicine, every member trains year-round to stay proficient across the whole rescue domain — because when the pager goes off, there's no time to learn on the job.</p>
+        <a class="btn btn--ghost" href="join.html" style="margin-top:8px">See how to join →</a>
+      </div>
+      <div class="reveal">
+        <div class="embed"><iframe src="https://www.youtube-nocookie.com/embed/EnFKdXtxysQ" title="An inside look at SAR" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS GRID -->
+<section class="section" style="background:var(--bg-2);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="eyebrow">SAR Skills</span>
+      <h2>The full <span class="lead-accent">skill set.</span></h2>
+      <p>SAR requires familiarity with — and ongoing training in — a wide range of skills. Tap any skill for a brief on how the team trains it.</p>
+    </div>
+    <div class="skillgrid reveal" id="skillgrid"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section section--tight">
+  <div class="wrap" style="text-align:center;max-width:720px">
+    <span class="eyebrow" style="justify-content:center">Train With Us</span>
+    <h2 style="font-size:clamp(30px,4.5vw,52px);font-weight:700;margin:16px 0 0">No one joins knowing it all.</h2>
+    <p style="color:var(--muted);font-size:18px;margin:18px auto 28px">You bring the drive; we'll provide the training. If you're fit, dependable, and ready to learn, we want to meet you.</p>
+    <a class="btn btn--primary" href="join.html">Become a Volunteer →</a>
+  </div>
+</section>
+
+<!-- SKILL MODAL -->
+<div class="smodal" id="smodal">
+  <div class="smodal__card">
+    <div class="smodal__banner">
+      <img id="sm_img" src="" alt="" />
+      <button class="smodal__x" id="sm_close" aria-label="Close">&times;</button>
+    </div>
+    <div class="smodal__body">
+      <span class="eyebrow">SAR Skill</span>
+      <h2 id="sm_title"></h2>
+      <div id="sm_body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html" style="margin-bottom:18px">
+          <img class="brand__badge" src="images/logo-patch.png" alt="VCSAR Team 1 — Fillmore Mountain Search & Rescue patch" />
+          <span><span class="brand__name">VCSAR Team 1</span><span class="brand__sub">Ventura County Sheriff's Office · Fillmore</span></span>
+        </a>
+        <p>An all-volunteer search &amp; rescue team serving Ventura County and beyond since 1946.</p>
+      </div>
+      <div><h4>Explore</h4><a href="index.html#capabilities">What We Do</a><a href="team.html">Our Team</a><a href="training.html">Training</a><a href="history.html">History &amp; Gallery</a><a href="honor.html">Honor Roll</a><a href="join.html">Join the Team</a></div>
+      <div><h4>Get Involved</h4><a href="join.html">Become a Volunteer</a><a href="donate.html">Make a Donation</a><a href="index.html#contact">Contact Us</a></div>
+      <div><h4>Contact</h4>
+        <p style="color:var(--muted);font-size:15px;margin:0 0 10px">524 Sespe Ave<br>Fillmore, CA 93015</p>
+        <a href="tel:8055242233">(805) 524-2233</a>
+        <a href="mailto:admin@vcsar1.org">admin@vcsar1.org</a>
+        <a href="https://www.instagram.com/vcsar1/" target="_blank" rel="noopener" aria-label="Follow us on Instagram" class="social-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 Ventura County Search &amp; Rescue · Team 1, Fillmore CA. All rights reserved.</span>
+      <span class="badge-line">In an emergency, call 911 · Dispatched via the Ventura County Sheriff's Office</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var t=document.getElementById('navtoggle'), l=document.getElementById('navlinks');
+  if(t) t.addEventListener('click',function(){ l.classList.toggle('open'); });
+
+  var IMG = 'images/gallery/';
+  var skills = [
+    { name:"Advanced Rope Systems", img:"SARwebsite_Courses-1-8-370x215.jpg", body:`
+      <p>Rope systems are critical tools for high-angle rescue — evacuating people from cliffs, crags, and steep terrain. The team builds systems from a core kit of components and rigs them for the situation at hand.</p>
+      <h3>Core components</h3>
+      <ul><li><strong>Static ropes</strong> for rescue (minimal stretch), <strong>dynamic ropes</strong> for climbing.</li><li>Anchors, harnesses, carabiners, pulleys, descenders/friction devices, ascenders, and belay devices.</li></ul>
+      <h3>Systems we build</h3>
+      <ul><li>Rappelling, haul systems with mechanical advantage (3:1, 5:1), twin-tension systems, and high-line systems across rivers or ravines.</li><li>VCSAR1 uses a <strong>two-rope system</strong> whenever possible.</li></ul>
+      <h3>Safety</h3>
+      <p>Every system is checked for wear and proper setup — all members get a complete gear check from a teammate before use. Redundancy is built in with prusiks, tie-offs, and "catastrophe knots."</p>` },
+    { name:"Anchors", img:"SARwebsite_Courses-1-9-370x215.jpg", body:`
+      <p>Anchors are the foundation of every rope system and are critical to operator safety. The right anchor type and placement depends on the environment, the rescue, and available gear.</p>
+      <h3>Principles</h3>
+      <ul><li><strong>Load distribution</strong> across multiple points (e.g., an "equalette").</li><li><strong>Redundancy</strong> — in snow, VCSAR1 often aims for triple redundancy.</li><li><strong>Directional anchors</strong> to guide ropes through complex terrain.</li></ul>
+      <h3>By environment</h3>
+      <ul><li><strong>High-angle:</strong> fixed natural anchors (trees, boulders) and man-made (bolts, pitons), plus mobile anchors like ice screws and pickets.</li><li><strong>Snow:</strong> deadman anchors and snow pickets — practiced often atop places like Mt. Pinos.</li><li><strong>USAR &amp; water:</strong> structural and boat anchors.</li></ul>
+      <p>Anchors are strength-tested before the team relies on them, with care to minimize environmental impact.</p>` },
+    { name:"Avalanche", img:"SARwebsite_Courses-1-17-370x215.jpg", body:`
+      <p>Avalanche rescue is time-critical — survival rates drop sharply after 15–18 minutes of burial, so immediate, organized action is everything.</p>
+      <h3>The sequence</h3>
+      <ul><li><strong>Transceiver search:</strong> every member carries a beacon (tested before use) and switches to "search" mode to locate the buried.</li><li><strong>Visual clues:</strong> skis, poles, or clothing on the surface.</li><li><strong>Probing</strong> to pinpoint depth and location, then efficient <strong>shoveling</strong> (often by several people).</li><li><strong>Helicopter operations</strong> for rapid response and evacuation where conditions allow.</li><li><strong>Medical care</strong> for hypothermia and trauma on extraction.</li></ul>` },
+    { name:"Climbing &amp; Belay", img:"SARwebsite_Courses-1-20-370x215.jpg", body:`
+      <p>Climbing and belay technique safely extracts people from vertical terrain. Clear communication and strong, redundant anchors underpin every operation — every critical action has a backup.</p>
+      <h3>Belay techniques</h3>
+      <ul><li>Standard (top-rope) belay, the <strong>Munter hitch</strong> when a device isn't available, and guide mode for managing two climbers or a lowered patient.</li></ul>
+      <h3>Rescue techniques</h3>
+      <ul><li>Ascending a rope (mechanical ascenders or prusiks), rappelling (with a "fireman's belay" for safety), hauling systems (Z-pulley, piggyback), and litter rigging for moving an injured person.</li></ul>
+      <p>These require constant practice — VCSAR1 works year-round in varied scenarios to hold the standard.</p>` },
+    { name:"Compass &amp; UTM Navigation", img:"SARwebsite_Courses-1-12-370x215.jpg", body:`
+      <p>Land navigation is both art and science — locating and reaching people lost in the wilderness, then guiding them out.</p>
+      <h3>Preparation</h3>
+      <ul><li>Map &amp; compass fundamentals, with GPS and mapping apps as a complement — never a crutch.</li><li>Route planning around terrain, weather, and the lost person's likely behavior.</li></ul>
+      <h3>Techniques</h3>
+      <ul><li>Dead reckoning, terrain association, and resection/triangulation from known landmarks.</li></ul>
+      <h3>When tech fails</h3>
+      <p>Technology is amazing until it isn't. When batteries die and signals drop, nothing beats map-and-compass skill — so VCSAR1 regularly drills the low-tech techniques to stay ready when the lights go out.</p>` },
+    { name:"Disaster Evacuation", img:"SARwebsite_Courses-1-14-370x215.jpg", body:`
+      <p>In natural and man-made disasters, the team locates and rescues people who are trapped, injured, or in danger, and helps evacuate hazard areas safely.</p>
+      <ul><li>Structural assessment, medical triage, and tools like drones and thermal imaging to locate victims.</li><li>Clearing evacuation routes, arranging transport, and preparing shelters.</li><li>Close coordination with fire, medical, and law enforcement for a swift, organized response.</li></ul>
+      <p>The goal is simple: protect and preserve life, and get immediate help to those affected.</p>` },
+    { name:"Evidence", img:"SARwebsite_Courses-1-16-370x215.jpg", body:`
+      <p>Evidence searches recover items — weapons or other critical objects — to aid the Sheriff's Office, and the team trains to recognize potential crime scenes and avoid contaminating them during search and recovery.</p>
+      <h3>Search methods</h3>
+      <ul><li>Wheel, spiral, strip/grid, and zone methods, chosen by terrain, scene size, and number of searchers.</li><li>Visual and auditory search, plus drones, thermal imaging, and GPS mapping.</li></ul>
+      <h3>Coordination</h3>
+      <p>A central incident command manages communications, resources, and multi-agency support, and everything found or searched is documented and mapped to avoid duplication and preserve the chain of evidence.</p>` },
+    { name:"First Aid &amp; Medical", img:"SARwebsite_Courses-1-6-370x215.jpg", body:`
+      <p>SAR medicine is adapted to the environment and the patient's condition, from wilderness injuries to disaster triage.</p>
+      <h3>In the field</h3>
+      <ul><li><strong>Triage</strong> — rapid primary assessment for life threats, then a secondary exam.</li><li><strong>Stabilization</strong> — airway management, bleeding control (pressure, tourniquets, hemostatics), and splinting.</li><li><strong>Extrication</strong> onto backboards or litters with spinal precautions, and treatment for shock, burns, and more.</li><li>Advanced life support for prolonged rescues, plus <strong>psychological first aid</strong>.</li></ul>
+      <h3>Our people</h3>
+      <p>All members are certified in at least basic lifesaving; many are EMTs. The team also includes a registered nurse and a former Navy medic, and coordinates with Air Unit physicians — backed by regular classroom and wilderness medical education.</p>` },
+    { name:"Helicopter Operations", img:"SARwebsite_Courses-1-13-370x215.jpg", body:`
+      <p>Helicopters insert and extract team members and locate and lift people in distress across mountains, wilderness, water, and urban terrain. SAR Team 1 is overseen directly by the <strong>VCSO Air Unit</strong> in Camarillo, whose pilots and medical crews are always on call.</p>
+      <h3>Capabilities</h3>
+      <ul><li>Hover and slow flight to search rugged, remote terrain quickly.</li><li><strong>Hoisting</strong> when landing isn't possible, <strong>medical evacuation</strong>, and <strong>disaster response</strong> moving people, supplies, and teams.</li></ul>
+      <h3>Operating safely</h3>
+      <p>Pre-flight briefings, prepared helicopter landing zones, PPE, tight comms, and night-vision capability — with extensive crew training in hoists, night rescues, and severe weather.</p>` },
+    { name:"Hiking &amp; Planning", img:"SARwebsite_Courses-1-18-370x215.jpg", body:`
+      <p>For all our tools, the most reliable method is still boots on the ground — members hiking in with heavy gear loads.</p>
+      <ul><li>Seasonal loads of <strong>25–60+ lbs</strong>; a helicopter drop-off doesn't guarantee a pickup; members must be ready to camp overnight.</li></ul>
+      <h3>A typical winter loadout</h3>
+      <ul><li>Chest rig: phone, lights, snacks, satcoms, gloves, shears, whistle, paracord, compass, ID, flagging tape, fire kit.</li><li>2.5–3 L water, 24 hours of food, stove and fuel.</li><li>Layered clothing, sleep system (bag, bivvy/tent, pad), and climbing gear (harness, carabiners, rope, rescue-8, prusiks).</li></ul>` },
+    { name:"Knots", img:"SARwebsite_Courses-1-2-370x215.jpg", body:`
+      <p>The ability to tie the right knot quickly and securely can be the difference between life and death. Knots secure ropes for rappelling, build lowering and raising systems, improvise litters, and stabilize patients during extraction.</p>
+      <p>Members master core knots like the <strong>bowline</strong>, <strong>figure-eight</strong>, and <strong>clove hitch</strong> — and practice tying them under pressure and in bad conditions, so they can adapt to any situation in the field.</p>` },
+    { name:"Lowering &amp; Raising Systems", img:"SARwebsite_Courses-1-19-370x215.jpg", body:`
+      <p>Lowering and raising systems move people and equipment through difficult terrain using ropes, pulleys, and mechanical-advantage devices — with redundancy and fail-safes built in throughout.</p>
+      <h3>Mechanical advantage</h3>
+      <ul><li><strong>2:1</strong> — halves the effort; quick to set up for simple lifts.</li><li><strong>3:1 (Z-rig)</strong> — the versatile workhorse, one-third the effort.</li><li><strong>5:1</strong> — greater force reduction for heavy loads; more complex to rig.</li></ul>
+      <p>Lowering uses friction or belay devices for a smooth, controlled descent that minimizes risk to the patient.</p>` },
+    { name:"Swift Water Rescue", img:"SARwebsite_Courses-1-11-370x215.jpg", body:`
+      <p>Swift-water rescue saves people from fast-moving water — rivers, floods, and rapids. Rescuers train in water dynamics and the use of specialized gear: throw bags, rescue ropes, and personal flotation devices.</p>
+      <p>Techniques include tethered rescues, boat operations, and inflatable rescue craft. The unpredictable nature of swift water demands quick assessment, rapid decisions, strong fitness, teamwork, and precise coordination to bring people to safety.</p>` },
+    { name:"Tracking", img:"SARwebsite_Courses-1-15-370x215.jpg", body:`
+      <p>Tracking locates missing people by reading the signs they leave behind. Rescuers look for disturbances in the terrain, broken vegetation, and other subtle indicators that reveal a path.</p>
+      <p>Skills include footprint analysis, pattern recognition, and environmental observation, supported by tools like tracking sticks and GPS. Combining traditional tracking with modern technology lets the team cover large areas efficiently and improve the odds of a find.</p>` },
+    { name:"USAR", img:"SARwebsite_Courses-1-370x215.jpg", body:`
+      <p>Urban Search and Rescue (USAR) locates, extricates, and stabilizes victims trapped in collapsed buildings, confined spaces, and other structural collapses.</p>
+      <h3>Key techniques</h3>
+      <ul><li><strong>Structural assessment</strong> to keep rescuers and victims safe.</li><li><strong>Shoring &amp; stabilization</strong> to prevent further collapse.</li><li><strong>Breaching &amp; breaking</strong> to create access through debris.</li><li><strong>Search</strong> with canines, listening devices, and thermal imaging.</li><li><strong>Rope rescue</strong> and immediate <strong>medical care</strong>.</li></ul>
+      <p>USAR teams work in close coordination with other emergency services to respond to urban disasters.</p>` },
+    { name:"Winter Survival", img:"SARwebsite_Courses-1-7-370x215.jpg", body:`
+      <p>Cold, snowy environments raise the stakes for everyone on scene. Winter survival skills keep both rescuers and victims safe in harsh, unpredictable conditions.</p>
+      <ul><li><strong>Clothing &amp; gear:</strong> insulated layers, snowshoes, crampons, thermal blankets.</li><li><strong>Shelter:</strong> snow caves and other temporary shelters against wind and cold.</li><li><strong>Fire starting</strong> for warmth and signaling, even in wet conditions.</li><li><strong>Navigation</strong> across snow-covered terrain where landmarks vanish.</li><li><strong>First aid:</strong> preventing and treating frostbite and hypothermia.</li><li><strong>Avalanche awareness</strong> — recognizing risk and performing beacon rescues.</li></ul>` }
+  ];
+
+  // Build grid
+  var grid = document.getElementById('skillgrid');
+  skills.forEach(function(s, i){
+    var card = document.createElement('div'); card.className='skillcard'; card.setAttribute('data-i', i);
+    var imgwrap = document.createElement('div'); imgwrap.className='skillcard__img';
+    var img = document.createElement('img'); img.src = IMG+s.img; img.alt=''; img.loading='lazy';
+    img.onerror = function(){ img.remove(); };
+    imgwrap.appendChild(img);
+    var nm = document.createElement('div'); nm.className='skillcard__name'; nm.innerHTML = s.name;
+    card.appendChild(imgwrap); card.appendChild(nm);
+    grid.appendChild(card);
+  });
+
+  // Modal
+  var sm = document.getElementById('smodal');
+  function openSkill(i){
+    var s = skills[i];
+    document.getElementById('sm_title').innerHTML = s.name;
+    document.getElementById('sm_body').innerHTML = s.body;
+    var im = document.getElementById('sm_img'); im.src = IMG+s.img; im.alt = '';
+    sm.classList.add('open');
+    sm.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSkill(){ sm.classList.remove('open'); document.body.style.overflow = ''; }
+  grid.addEventListener('click', function(e){ var c = e.target.closest('.skillcard'); if(c) openSkill(+c.getAttribute('data-i')); });
+  document.getElementById('sm_close').addEventListener('click', closeSkill);
+  sm.addEventListener('click', function(e){ if(e.target===sm) closeSkill(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeSkill(); });
+
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }); },{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+</body>
+</html>

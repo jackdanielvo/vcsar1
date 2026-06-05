@@ -453,6 +453,38 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
 .team__group h2 { font-size: clamp(26px,3.4vw,40px); font-weight: 700; display: flex; align-items: baseline; gap: 14px; }
 .team__group h2 small { font-family: "Inter",sans-serif; text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 15px; color: var(--muted); }
 
+/* ---- Training: skill grid + modal ----------------------- */
+.skillgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.skillcard { position: relative; border: 1px solid var(--line); background: var(--surface); cursor: pointer; overflow: hidden; transition: transform .35s var(--ease), border-color .35s, box-shadow .35s; }
+.skillcard:hover { transform: translateY(-6px); border-color: var(--orange); box-shadow: 0 22px 44px -22px rgba(0,0,0,.7); }
+.skillcard__img { aspect-ratio: 370/215; overflow: hidden; background: var(--surface-2); }
+.skillcard__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+.skillcard:hover .skillcard__img img { transform: scale(1.06); }
+.skillcard__name { font-family: "Oswald", sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; font-size: 15px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; line-height: 1.1; }
+.skillcard__name::after { content: "→"; color: var(--orange); flex: none; transition: transform .3s; }
+.skillcard:hover .skillcard__name::after { transform: translateX(4px); }
+
+.smodal { position: fixed; inset: 0; z-index: 200; background: rgba(8,9,6,.9); display: none; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow: auto; }
+.smodal.open { display: flex; }
+.smodal__card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 5px; max-width: 760px; width: 100%; overflow: hidden; box-shadow: var(--shadow); }
+.smodal__banner { aspect-ratio: 16/6.5; background: var(--surface-2); position: relative; }
+.smodal__banner img { width: 100%; height: 100%; object-fit: cover; }
+.smodal__x { position: absolute; top: 14px; right: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(8,9,6,.6); color: #fff; border: 1px solid rgba(255,255,255,.25); font-size: 22px; line-height: 1; cursor: pointer; }
+.smodal__x:hover { background: var(--orange); color: #160a02; }
+.smodal__body { padding: 28px 34px 38px; }
+.smodal__body h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin: 6px 0 0; }
+.smodal__body h3 { font-family: "Oswald", sans-serif; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; color: var(--orange); margin: 22px 0 8px; }
+.smodal__body p { color: var(--muted); font-size: 15.5px; line-height: 1.65; margin: 0 0 12px; }
+.smodal__body ul { color: var(--muted); font-size: 15px; line-height: 1.6; margin: 0 0 12px; padding-left: 20px; }
+.smodal__body li { margin: 6px 0; }
+.smodal__body strong { color: var(--text); }
+@media (max-width: 1100px) { .skillgrid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px) { .skillgrid { grid-template-columns: repeat(2, 1fr); } .smodal__body { padding: 24px 22px 30px; } }
+
+/* video embed (responsive 16:9) */
+.embed { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; background: #000; }
+.embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
 /* ---- Video band (optional, for chopper footage) --------- */
 .vidband { position: relative; overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); min-height: 460px; display: flex; align-items: center; }
 .vidband video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
