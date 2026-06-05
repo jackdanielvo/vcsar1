@@ -6,6 +6,7 @@
    ========================================================= */
 
 :root {
+  color-scheme: dark;     /* site is dark by design — opt out of browser auto-dark transforms */
   --bg:        #181c11;   /* dark olive drab base */
   --bg-2:      #1f2416;
   --surface:   #272d1b;
