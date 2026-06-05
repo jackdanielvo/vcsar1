@@ -458,6 +458,12 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
 .skillcard { position: relative; border: 1px solid var(--line); background: var(--surface); cursor: pointer; overflow: hidden; transition: transform .35s var(--ease), border-color .35s, box-shadow .35s; }
 .skillcard:hover { transform: translateY(-6px); border-color: var(--orange); box-shadow: 0 22px 44px -22px rgba(0,0,0,.7); }
 .skillcard__img { aspect-ratio: 370/215; overflow: hidden; background: var(--surface-2); }
+.skillcard__icon { aspect-ratio: 370/215; display: grid; place-items: center; background: repeating-linear-gradient(45deg, rgba(255,90,31,.06) 0 12px, transparent 12px 24px), linear-gradient(135deg, var(--surface-2), var(--bg-2)); }
+.skillcard__icon svg { width: 58px; height: 58px; color: var(--orange); transition: transform .5s var(--ease); }
+.skillcard:hover .skillcard__icon svg { transform: scale(1.1); }
+.smodal__icon { display: none; place-items: center; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, rgba(255,90,31,.06) 0 14px, transparent 14px 28px), linear-gradient(135deg, var(--surface-2), var(--bg-2)); }
+.smodal__icon svg { width: 96px; height: 96px; color: var(--orange); }
+.smodal__banner--icon .smodal__icon { display: grid; }
 .skillcard__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
 .skillcard:hover .skillcard__img img { transform: scale(1.06); }
 .skillcard__name { font-family: "Oswald", sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; font-size: 15px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; line-height: 1.1; }

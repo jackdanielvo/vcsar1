@@ -75,7 +75,6 @@ dl "$BASE/2025/01/SARwebsite_Courses-1-13-370x215.jpg" "SARwebsite_Courses-1-13-
 dl "$BASE/2025/01/SARwebsite_Courses-1-14-370x215.jpg" "SARwebsite_Courses-1-14-370x215.jpg"
 dl "$BASE/2025/01/SARwebsite_Courses-1-15-370x215.jpg" "SARwebsite_Courses-1-15-370x215.jpg"
 dl "$BASE/2025/01/SARwebsite_Courses-1-16-370x215.jpg" "SARwebsite_Courses-1-16-370x215.jpg"
-dl "$BASE/2017/09/SARwebsite_Courses-1-18-370x215.jpg" "SARwebsite_Courses-1-18-370x215.jpg"
 dl "$BASE/2017/09/SARwebsite_Courses-1-19-370x215.jpg" "SARwebsite_Courses-1-19-370x215.jpg"
 dl "$BASE/2018/01/SARwebsite_Courses-1-17-370x215.jpg" "SARwebsite_Courses-1-17-370x215.jpg"
 dl "$BASE/2018/01/SARwebsite_Courses-1-20-370x215.jpg" "SARwebsite_Courses-1-20-370x215.jpg"

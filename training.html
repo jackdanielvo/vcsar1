@@ -92,8 +92,9 @@
 <!-- SKILL MODAL -->
 <div class="smodal" id="smodal">
   <div class="smodal__card">
-    <div class="smodal__banner">
+    <div class="smodal__banner" id="sm_banner">
       <img id="sm_img" src="" alt="" />
+      <div class="smodal__icon" id="sm_icon"></div>
       <button class="smodal__x" id="sm_close" aria-label="Close">&times;</button>
     </div>
     <div class="smodal__body">
@@ -136,6 +137,13 @@
   if(t) t.addEventListener('click',function(){ l.classList.toggle('open'); });
 
   var IMG = 'images/gallery/';
+  var DRONE_SVG = '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+
+    '<rect x="26" y="26" width="12" height="12" rx="2"/>'+
+    '<line x1="26" y1="26" x2="17" y2="17"/><line x1="38" y1="26" x2="47" y2="17"/>'+
+    '<line x1="26" y1="38" x2="17" y2="47"/><line x1="38" y1="38" x2="47" y2="47"/>'+
+    '<circle cx="14" cy="14" r="6"/><circle cx="50" cy="14" r="6"/><circle cx="14" cy="50" r="6"/><circle cx="50" cy="50" r="6"/>'+
+    '<line x1="29.5" y1="40" x2="27.5" y2="46.5"/><line x1="34.5" y1="40" x2="36.5" y2="46.5"/>'+
+    '</svg>';
   var skills = [
     { name:"Advanced Rope Systems", img:"SARwebsite_Courses-1-8-370x215.jpg", body:`
       <p>Rope systems are critical tools for high-angle rescue — evacuating people from cliffs, crags, and steep terrain. The team builds systems from a core kit of components and rigs them for the situation at hand.</p>
@@ -175,6 +183,16 @@
       <p>In natural and man-made disasters, the team locates and rescues people who are trapped, injured, or in danger, and helps evacuate hazard areas safely.</p>
       <ul><li>Structural assessment, medical triage, and tools like drones and thermal imaging to locate victims.</li><li>Clearing evacuation routes, arranging transport, and preparing shelters.</li><li>Close coordination with fire, medical, and law enforcement for a swift, organized response.</li></ul>
       <p>The goal is simple: protect and preserve life, and get immediate help to those affected.</p>` },
+    { name:"Drone Operations", svg:DRONE_SVG, body:`
+      <p>A drone gives a SAR team something it never had before — an immediate, persistent set of eyes overhead. Drones don't replace ground searchers; they make every searcher more effective, covering ground up to <strong>10× faster</strong>, reaching cliffs, water, and canopy that crews can't, and searching day or night with thermal imaging.</p>
+      <h3>What they add</h3>
+      <ul><li>Fast hasty searches and perimeter sweeps, with live video to Incident Command for shared situational awareness.</li><li>Thermal imaging to see through darkness and light cover; GPS-marked points of interest.</li><li>Overwatch and support for K9, swift-water, rope, OHV, and medical teams.</li></ul>
+      <h3>We fly under Part 107</h3>
+      <p>VCSAR operates under FAA Part 107 with a certified Remote Pilot in Command. Airspace authorizations — NOTAM, LAANC, and SGI for emergencies — are confirmed <strong>before</strong> every launch, and drones fly only when the Incident Commander authorizes them. No "I brought my own drone."</p>
+      <h3>Crew &amp; safety</h3>
+      <p>The minimum safe crew is a pilot plus a visual observer; a full team adds a search technician and ground support. Every flight runs on Crew Resource Management, a PEAACE risk check, and firm weather minimums — when in doubt, the aircraft lands.</p>
+      <h3>How we search</h3>
+      <p>Flights are guided by Lost Person Behavior and the CalAIR <strong>Overview → Focused → Systematic</strong> method: fast hasty scans of high-probability areas first (where most finds happen), then clearing terrain to rule it in or out, then full-coverage grids — with offline image review further boosting detection.</p>` },
     { name:"Evidence", img:"SARwebsite_Courses-1-16-370x215.jpg", body:`
       <p>Evidence searches recover items — weapons or other critical objects — to aid the Sheriff's Office, and the team trains to recognize potential crime scenes and avoid contaminating them during search and recovery.</p>
       <h3>Search methods</h3>
@@ -193,11 +211,6 @@
       <ul><li>Hover and slow flight to search rugged, remote terrain quickly.</li><li><strong>Hoisting</strong> when landing isn't possible, <strong>medical evacuation</strong>, and <strong>disaster response</strong> moving people, supplies, and teams.</li></ul>
       <h3>Operating safely</h3>
       <p>Pre-flight briefings, prepared helicopter landing zones, PPE, tight comms, and night-vision capability — with extensive crew training in hoists, night rescues, and severe weather.</p>` },
-    { name:"Hiking &amp; Planning", img:"SARwebsite_Courses-1-18-370x215.jpg", body:`
-      <p>For all our tools, the most reliable method is still boots on the ground — members hiking in with heavy gear loads.</p>
-      <ul><li>Seasonal loads of <strong>25–60+ lbs</strong>; a helicopter drop-off doesn't guarantee a pickup; members must be ready to camp overnight.</li></ul>
-      <h3>A typical winter loadout</h3>
-      <ul><li>Chest rig: phone, lights, snacks, satcoms, gloves, shears, whistle, paracord, compass, ID, flagging tape, fire kit.</li><li>2.5–3 L water, 24 hours of food, stove and fuel.</li><li>Layered clothing, sleep system (bag, bivvy/tent, pad), and climbing gear (harness, carabiners, rope, rescue-8, prusiks).</li></ul>` },
     { name:"Knots", img:"SARwebsite_Courses-1-2-370x215.jpg", body:`
       <p>The ability to tie the right knot quickly and securely can be the difference between life and death. Knots secure ropes for rappelling, build lowering and raising systems, improvise litters, and stabilize patients during extraction.</p>
       <p>Members master core knots like the <strong>bowline</strong>, <strong>figure-eight</strong>, and <strong>clove hitch</strong> — and practice tying them under pressure and in bad conditions, so they can adapt to any situation in the field.</p>` },
@@ -226,12 +239,18 @@
   var grid = document.getElementById('skillgrid');
   skills.forEach(function(s, i){
     var card = document.createElement('div'); card.className='skillcard'; card.setAttribute('data-i', i);
-    var imgwrap = document.createElement('div'); imgwrap.className='skillcard__img';
-    var img = document.createElement('img'); img.src = IMG+s.img; img.alt=''; img.loading='lazy';
-    img.onerror = function(){ img.remove(); };
-    imgwrap.appendChild(img);
+    if(s.svg){
+      var ic = document.createElement('div'); ic.className='skillcard__icon'; ic.innerHTML = s.svg;
+      card.appendChild(ic);
+    } else {
+      var imgwrap = document.createElement('div'); imgwrap.className='skillcard__img';
+      var img = document.createElement('img'); img.src = IMG+s.img; img.alt=''; img.loading='lazy';
+      img.onerror = function(){ img.remove(); };
+      imgwrap.appendChild(img);
+      card.appendChild(imgwrap);
+    }
     var nm = document.createElement('div'); nm.className='skillcard__name'; nm.innerHTML = s.name;
-    card.appendChild(imgwrap); card.appendChild(nm);
+    card.appendChild(nm);
     grid.appendChild(card);
   });
 
@@ -241,7 +260,19 @@
     var s = skills[i];
     document.getElementById('sm_title').innerHTML = s.name;
     document.getElementById('sm_body').innerHTML = s.body;
-    var im = document.getElementById('sm_img'); im.src = IMG+s.img; im.alt = '';
+    var banner = document.getElementById('sm_banner');
+    var im = document.getElementById('sm_img');
+    var ic = document.getElementById('sm_icon');
+    if(s.svg){
+      banner.classList.add('smodal__banner--icon');
+      im.style.display = 'none';
+      ic.innerHTML = s.svg;
+    } else {
+      banner.classList.remove('smodal__banner--icon');
+      im.style.display = '';
+      im.src = IMG+s.img; im.alt = '';
+      ic.innerHTML = '';
+    }
     sm.classList.add('open');
     sm.scrollTop = 0;
     document.body.style.overflow = 'hidden';
