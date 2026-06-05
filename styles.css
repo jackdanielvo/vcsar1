@@ -343,6 +343,8 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
 .choice span { display: inline-block; padding: 12px 18px; border: 1px solid var(--line); border-radius: 2px; background: var(--bg); color: var(--muted); font-size: 15px; transition: all .2s; }
 .choice input:checked + span { border-color: var(--orange); background: rgba(255,90,31,.12); color: var(--text); }
 .choice input:focus-visible + span { outline: 2px solid var(--orange); outline-offset: 2px; }
+.field--err > label { color: #ff9d86; }
+.field--err .choice span { border-color: #e0533a; }
 
 /* fitness slider */
 .rangewrap { display: flex; align-items: center; gap: 18px; }

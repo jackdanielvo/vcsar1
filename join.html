@@ -151,7 +151,7 @@
         <div class="field">
           <label>Are you at least 21 years old? <span class="reqstar">*</span></label>
           <div class="choice">
-            <label><input type="radio" name="age" value="21 or older" required /><span>21 or older</span></label>
+            <label><input type="radio" name="age" value="21 or older" /><span>21 or older</span></label>
             <label><input type="radio" name="age" value="Under 21" /><span>Under 21</span></label>
           </div>
           <p class="field__hint">Team members must be at least 21 years old.</p>
@@ -160,7 +160,7 @@
         <div class="field">
           <label>Will your employer let you leave for callouts? <span class="reqstar">*</span></label>
           <div class="choice">
-            <label><input type="radio" name="employer_callouts" value="Yes" required /><span>Yes</span></label>
+            <label><input type="radio" name="employer_callouts" value="Yes" /><span>Yes</span></label>
             <label><input type="radio" name="employer_callouts" value="No" /><span>No</span></label>
           </div>
         </div>
@@ -177,7 +177,7 @@
         <div class="field">
           <label>Level of wilderness experience <span class="reqstar">*</span></label>
           <div class="choice">
-            <label><input type="radio" name="wilderness" value="Rarely go into the wilderness" required /><span>Rarely</span></label>
+            <label><input type="radio" name="wilderness" value="Rarely go into the wilderness" /><span>Rarely</span></label>
             <label><input type="radio" name="wilderness" value="Occasionally do wilderness activities" /><span>Occasionally</span></label>
             <label><input type="radio" name="wilderness" value="Regularly do wilderness activities" /><span>Regularly</span></label>
           </div>
@@ -256,6 +256,24 @@
     var btn = document.getElementById('appsubmit');
     status.className = 'form__status';
 
+    // The choice-chip radios are visually hidden, so the native validation
+    // popup can't show on them. Validate those groups here with a clear message.
+    var radioGroups = [
+      { name: 'age',               label: 'whether you’re at least 21' },
+      { name: 'employer_callouts', label: 'whether your employer allows callouts' },
+      { name: 'wilderness',        label: 'your wilderness experience level' }
+    ];
+    Array.prototype.forEach.call(form.querySelectorAll('.field--err'), function(f){ f.classList.remove('field--err'); });
+    var missing = radioGroups.filter(function(g){ return !form.querySelector('input[name="' + g.name + '"]:checked'); });
+    if (missing.length) {
+      status.textContent = 'Please answer: ' + missing.map(function(m){ return m.label; }).join('; ') + '.';
+      status.className = 'form__status err show';
+      var firstEl = form.querySelector('input[name="' + missing[0].name + '"]');
+      var fld = firstEl && firstEl.closest('.field');
+      if (fld) { fld.classList.add('field--err'); fld.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      return;
+    }
+
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
@@ -289,6 +307,13 @@
     fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', body:new FormData(form) })
       .then(ok)
       .catch(fail);
+  });
+
+  // Clear a group's error highlight as soon as the applicant answers it
+  if (form) form.addEventListener('change', function(e){
+    if (e.target && ['age','employer_callouts','wilderness'].indexOf(e.target.name) >= 0){
+      var f = e.target.closest('.field'); if (f) f.classList.remove('field--err');
+    }
   });
 
   var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }); }, { threshold:.12 });
