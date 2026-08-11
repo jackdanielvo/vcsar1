@@ -67,6 +67,27 @@
   .crople { font-size:12px; color:var(--faint); margin:12px 0 6px; font-family:"Oswald",sans-serif; text-transform:uppercase; letter-spacing:.1em; }
   input[type=range].crop { width:100%; accent-color:var(--orange); }
   .busy { opacity:.5; pointer-events:none; }
+
+  /* Email Candidates panel */
+  .panel { margin-top:34px; border:1px solid var(--line); border-radius:3px; background:var(--surface); padding:26px 28px 30px; }
+  .panel__head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:22px; }
+  .panel__head h2 { font-family:"Oswald",sans-serif; text-transform:uppercase; font-size:20px; margin:0; letter-spacing:.03em; }
+  .panel__sub { color:var(--muted); font-size:14px; margin:5px 0 0; }
+  .an__actions { display:flex; gap:12px; justify-content:flex-end; margin-top:6px; flex-wrap:wrap; }
+  #emailPanel code { background:var(--bg); border:1px solid var(--line); border-radius:2px; padding:1px 5px; font-size:12px; color:var(--orange); }
+  .pickbar { display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .pickbar input[type=search] { flex:1; min-width:200px; background:var(--bg); border:1px solid var(--line); color:var(--text); padding:11px 14px; border-radius:2px; font:inherit; font-size:15px; }
+  .pickbar input[type=search]:focus { outline:none; border-color:var(--orange); }
+  .picklist { max-height:290px; overflow:auto; border:1px solid var(--line); border-radius:3px; background:var(--bg); }
+  .picklist__empty { padding:26px; text-align:center; color:var(--faint); font-size:14px; }
+  .pick { display:grid; grid-template-columns:24px 1fr auto; gap:12px; align-items:center; padding:11px 14px; border-bottom:1px solid var(--line); cursor:pointer; }
+  .pick:last-child { border-bottom:0; }
+  .pick:hover { background:var(--surface); }
+  .pick input { width:17px; height:17px; accent-color:var(--orange); cursor:pointer; }
+  .pick__name { font-weight:600; font-size:15px; }
+  .pick__meta { color:var(--muted); font-size:12.5px; margin-top:2px; }
+  .pick__tag { font-family:"Oswald",sans-serif; text-transform:uppercase; letter-spacing:.08em; font-size:11px; color:var(--faint); text-align:right; white-space:nowrap; }
+  @media (max-width:560px){ .an__actions .btn { width:100%; justify-content:center; } }
   @media (max-width:560px){ .photoedit{ grid-template-columns:1fr; } .row{ grid-template-columns:48px 1fr; } .row__actions{ grid-column:1/-1; justify-content:flex-end; } }
 </style>
 </head>
@@ -102,6 +123,61 @@
       </div>
     </div>
     <div class="rows" id="rows"></div>
+
+    <!-- ===== EMAIL CANDIDATES ===== -->
+    <div class="panel" id="emailPanel">
+      <div class="panel__head">
+        <div>
+          <h2>Email Candidates</h2>
+          <p class="panel__sub">Send meeting &amp; training dates to people who applied to join.</p>
+        </div>
+        <span class="pill" id="audCount">—</span>
+      </div>
+
+      <div class="field--row">
+        <div class="field"><label>Subject line</label>
+          <input type="text" id="an_subject" placeholder="VCSAR Team 1 — Upcoming meeting &amp; training dates" />
+        </div>
+        <div class="field"><label>Send to</label>
+          <select id="an_audience">
+            <option>Last 12 months</option>
+            <option>All applicants</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Choose who gets this email</label>
+        <div class="pickbar">
+          <input type="search" id="an_search" placeholder="Search name, email, or city…" />
+          <button type="button" class="iconbtn" id="an_all">Select all</button>
+          <button type="button" class="iconbtn" id="an_none">Select none</button>
+        </div>
+        <div class="picklist" id="an_list"><div class="picklist__empty">Loading candidates…</div></div>
+        <p class="field__hint">Only ticked candidates are emailed. Newest applicants first — fitness and wilderness answers are shown to help you screen.</p>
+      </div>
+
+      <div class="field">
+        <label>Message</label>
+        <textarea id="an_body" style="min-height:210px" placeholder="Hi {{NAME}},
+
+Our next prospective-member meeting is Tuesday, September 9 at 7:00 PM, at the Fillmore SAR building (524 Sespe Ave).
+
+Upcoming training: Saturday, September 20 — land navigation. Bring sturdy boots, water, and a day pack.
+
+Please reply to let us know if you can make it.
+
+Sincerely yours,
+VCSAR1 Recruiting"></textarea>
+        <p class="field__hint">One paragraph per line (blank lines are ignored). Type <code>{{NAME}}</code> to insert the person's first name. The Sheriff's badge header and footer are added automatically.</p>
+      </div>
+
+      <div class="an__actions">
+        <button class="btn btn--ghost" id="an_preview">Send me a preview</button>
+        <button class="btn btn--primary" id="an_send">Send to candidates →</button>
+      </div>
+      <div class="form__status" id="an_status" role="status" aria-live="polite"></div>
+    </div>
   </div>
 </div>
 
@@ -382,7 +458,124 @@ async function removeMember(id){
   }
 }
 
+/* ---------- Email Candidates ---------- */
+const APPS_URL = window.APPS_SCRIPT_URL || "";
+const anStatus = $('an_status');
+
+function anMsg(text, kind){
+  anStatus.innerHTML = text;
+  anStatus.className = 'form__status ' + (kind || 'ok') + ' show';
+}
+async function anCall(action, extra){
+  if(!LIVE) throw new Error("Demo mode — sign in with Supabase to email candidates.");
+  if(!APPS_URL) throw new Error("Missing APPS_SCRIPT_URL in supabase-config.js.");
+  const { data } = await sb.auth.getSession();
+  const token = data && data.session ? data.session.access_token : null;
+  if(!token) throw new Error("Your session expired — please sign out and back in.");
+  const fd = new FormData();
+  fd.append('action', action);
+  fd.append('token', token);
+  fd.append('audience', $('an_audience').value);
+  Object.keys(extra||{}).forEach(k => fd.append(k, extra[k]));
+  const res = await fetch(APPS_URL, { method:'POST', body: fd });
+  const out = await res.json();
+  if(out.result !== 'ok') throw new Error(out.error || 'Something went wrong.');
+  return out;
+}
+
+// ----- Candidate picker -----
+let candidates = [];              // all candidates for the chosen audience
+const chosen = new Set();         // emails ticked to receive the email
+
+function updatePill(){
+  const pill = $('audCount');
+  pill.textContent = chosen.size + ' of ' + candidates.length + ' selected';
+  pill.className = 'pill ' + (chosen.size ? 'live' : 'demo');
+}
+
+function renderPicks(){
+  const box = $('an_list');
+  const q = ($('an_search').value || '').toLowerCase().trim();
+  const list = candidates.filter(c =>
+    !q || (c.fullName + ' ' + c.email + ' ' + (c.city||'')).toLowerCase().includes(q));
+  if(!list.length){
+    box.innerHTML = '<div class="picklist__empty">' +
+      (candidates.length ? 'No candidates match that search.' : 'No candidates found for this audience.') + '</div>';
+    updatePill(); return;
+  }
+  box.innerHTML = '';
+  list.forEach(c => {
+    const row = document.createElement('label'); row.className = 'pick';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = chosen.has(c.email); cb.setAttribute('data-email', c.email);
+    cb.addEventListener('change', () => {
+      cb.checked ? chosen.add(c.email) : chosen.delete(c.email);
+      updatePill();
+    });
+    const mid = document.createElement('div');
+    const bits = [c.email, c.city, c.wilderness].filter(Boolean).join(' · ');
+    mid.innerHTML = '<div class="pick__name">' + esc(c.fullName) + '</div>' +
+                    '<div class="pick__meta">' + esc(bits) + '</div>';
+    const tag = document.createElement('div'); tag.className = 'pick__tag';
+    tag.innerHTML = (c.fitness ? 'Fitness ' + esc(c.fitness) + '<br>' : '') + esc(c.applied || '');
+    row.appendChild(cb); row.appendChild(mid); row.appendChild(tag);
+    box.appendChild(row);
+  });
+  updatePill();
+}
+
+async function loadCandidates(){
+  const box = $('an_list');
+  if(!LIVE){ box.innerHTML = '<div class="picklist__empty">Demo mode — sign in to load candidates.</div>'; $('audCount').textContent='demo mode'; return; }
+  box.innerHTML = '<div class="picklist__empty">Loading candidates…</div>';
+  try {
+    const r = await anCall('announce_list');
+    candidates = r.candidates || [];
+    chosen.clear();
+    candidates.forEach(c => chosen.add(c.email));   // default: everyone ticked
+    renderPicks();
+  } catch(e){
+    box.innerHTML = '<div class="picklist__empty">Could not load candidates: ' + esc(e.message) + '</div>';
+    $('audCount').textContent = '—';
+  }
+}
+
+$('an_audience').addEventListener('change', loadCandidates);
+$('an_search').addEventListener('input', renderPicks);
+$('an_all').addEventListener('click', () => { candidates.forEach(c=>chosen.add(c.email)); renderPicks(); });
+$('an_none').addEventListener('click', () => { chosen.clear(); renderPicks(); });
+
+$('an_preview').addEventListener('click', async () => {
+  const btn = $('an_preview'); btn.disabled = true; btn.textContent = 'Sending…';
+  anStatus.className = 'form__status';
+  try {
+    const r = await anCall('announce_preview', { subject: $('an_subject').value, body: $('an_body').value });
+    anMsg('Preview sent to <strong>' + esc(r.preview) + '</strong>. Check it, then send to candidates.', 'ok');
+  } catch(e){ anMsg(esc(e.message), 'err'); }
+  btn.disabled = false; btn.textContent = 'Send me a preview';
+});
+
+$('an_send').addEventListener('click', async () => {
+  const subject = $('an_subject').value.trim();
+  if(!subject || !$('an_body').value.trim()){ anMsg('Please add a subject line and a message first.', 'err'); return; }
+  if(!chosen.size){ anMsg('No candidates are selected — tick at least one person.', 'err'); return; }
+  if(!confirm('Send "' + subject + '" to ' + chosen.size + ' selected candidate(s)?\n\nThis sends real emails now and cannot be undone.')) return;
+
+  const btn = $('an_send'); btn.disabled = true; btn.textContent = 'Sending…';
+  anStatus.className = 'form__status';
+  try {
+    const r = await anCall('announce', {
+      subject: subject,
+      body: $('an_body').value,
+      emails: Array.from(chosen).join(',')
+    });
+    anMsg('Sent to <strong>' + r.sent + '</strong> candidate(s).' + (r.failed ? ' ' + r.failed + ' failed.' : '') , 'ok');
+  } catch(e){ anMsg(esc(e.message), 'err'); }
+  btn.disabled = false; btn.textContent = 'Send to candidates →';
+});
+
 init();
+setTimeout(loadCandidates, 800);
 </script>
 </body>
 </html>
