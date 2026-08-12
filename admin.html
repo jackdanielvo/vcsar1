@@ -152,6 +152,7 @@
           <input type="search" id="an_search" placeholder="Search name, email, or city…" />
           <button type="button" class="iconbtn" id="an_all">Select all</button>
           <button type="button" class="iconbtn" id="an_none">Select none</button>
+          <button type="button" class="iconbtn" id="an_reload">Reload</button>
         </div>
         <div class="picklist" id="an_list"><div class="picklist__empty">Loading candidates…</div></div>
         <p class="field__hint">Only ticked candidates are emailed. Newest applicants first — fitness and wilderness answers are shown to help you screen.</p>
@@ -275,7 +276,14 @@ async function init(){
 }
 
 function showLogin(){ $('loginView').style.display='block'; $('manageView').style.display='none'; }
-function showManager(){ $('loginView').style.display='none'; $('manageView').style.display='block'; $('signoutBtn').style.display = LIVE ? 'inline-flex':'none'; renderRows(); }
+function showManager(){
+  $('loginView').style.display='none';
+  $('manageView').style.display='block';
+  $('signoutBtn').style.display = LIVE ? 'inline-flex':'none';
+  renderRows();
+  // Load the candidate picker now that we're actually signed in.
+  if (typeof loadCandidates === 'function') loadCandidates();
+}
 
 $('loginForm').addEventListener('submit', async e=>{
   e.preventDefault();
@@ -469,9 +477,14 @@ function anMsg(text, kind){
 async function anCall(action, extra){
   if(!LIVE) throw new Error("Demo mode — sign in with Supabase to email candidates.");
   if(!APPS_URL) throw new Error("Missing APPS_SCRIPT_URL in supabase-config.js.");
-  const { data } = await sb.auth.getSession();
-  const token = data && data.session ? data.session.access_token : null;
-  if(!token) throw new Error("Your session expired — please sign out and back in.");
+  let { data } = await sb.auth.getSession();
+  let token = data && data.session ? data.session.access_token : null;
+  if(!token){                                   // session still settling — wait and retry once
+    await new Promise(r => setTimeout(r, 1200));
+    ({ data } = await sb.auth.getSession());
+    token = data && data.session ? data.session.access_token : null;
+  }
+  if(!token) throw new Error("Not signed in yet — click Reload, or sign out and back in.");
   const fd = new FormData();
   fd.append('action', action);
   fd.append('token', token);
@@ -544,6 +557,7 @@ $('an_audience').addEventListener('change', loadCandidates);
 $('an_search').addEventListener('input', renderPicks);
 $('an_all').addEventListener('click', () => { candidates.forEach(c=>chosen.add(c.email)); renderPicks(); });
 $('an_none').addEventListener('click', () => { chosen.clear(); renderPicks(); });
+$('an_reload').addEventListener('click', loadCandidates);
 
 $('an_preview').addEventListener('click', async () => {
   const btn = $('an_preview'); btn.disabled = true; btn.textContent = 'Sending…';
@@ -575,7 +589,6 @@ $('an_send').addEventListener('click', async () => {
 });
 
 init();
-setTimeout(loadCandidates, 800);
 </script>
 </body>
 </html>
