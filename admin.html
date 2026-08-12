@@ -474,20 +474,32 @@ function anMsg(text, kind){
   anStatus.innerHTML = text;
   anStatus.className = 'form__status ' + (kind || 'ok') + ' show';
 }
+// The admin key lives in a Supabase table only signed-in users can read.
+let adminKey = null;
+async function getAdminKey(){
+  if(adminKey) return adminKey;
+  const { data, error } = await sb.from('app_secrets').select('value').eq('key','announce').single();
+  if(error || !data) throw new Error("Couldn't read the admin key — check the app_secrets table in Supabase.");
+  adminKey = data.value;
+  return adminKey;
+}
+
 async function anCall(action, extra){
   if(!LIVE) throw new Error("Demo mode — sign in with Supabase to email candidates.");
   if(!APPS_URL) throw new Error("Missing APPS_SCRIPT_URL in supabase-config.js.");
   let { data } = await sb.auth.getSession();
-  let token = data && data.session ? data.session.access_token : null;
-  if(!token){                                   // session still settling — wait and retry once
+  let session = data ? data.session : null;
+  if(!session){                                 // session still settling — wait and retry once
     await new Promise(r => setTimeout(r, 1200));
     ({ data } = await sb.auth.getSession());
-    token = data && data.session ? data.session.access_token : null;
+    session = data ? data.session : null;
   }
-  if(!token) throw new Error("Not signed in yet — click Reload, or sign out and back in.");
+  if(!session) throw new Error("Not signed in yet — click Reload, or sign out and back in.");
+  const key = await getAdminKey();
   const fd = new FormData();
   fd.append('action', action);
-  fd.append('token', token);
+  fd.append('secret', key);
+  fd.append('admin', (session.user && session.user.email) ? session.user.email : '');
   fd.append('audience', $('an_audience').value);
   Object.keys(extra||{}).forEach(k => fd.append(k, extra[k]));
   const res = await fetch(APPS_URL, { method:'POST', body: fd });

@@ -571,27 +571,29 @@ function jsonOut_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// Confirms the caller is a logged-in admin; returns their email or null.
-function verifyAdmin_(token) {
-  if (!token) return null;
-  try {
-    var res = UrlFetchApp.fetch(SUPABASE_URL_GS + "/auth/v1/user", {
-      method: "get",
-      headers: { Authorization: "Bearer " + token, apikey: SUPABASE_ANON_GS },
-      muteHttpExceptions: true
-    });
-    if (res.getResponseCode() !== 200) return null;
-    var u = JSON.parse(res.getContentText());
-    return u && u.email ? u.email : null;
-  } catch (err) {
-    console.error("Admin verify failed: " + err);
-    return null;
-  }
+// Shared key that proves the request came from a signed-in admin.
+// The admin page reads this same value from a Supabase table that only
+// logged-in users can read, so anonymous visitors can never obtain it.
+// (Must exactly match the value stored in Supabase.)
+var ANNOUNCE_SECRET = "hbyXNMF17eL9bvZRWyy8NifgXAtGxdg8IYBvLdwtY00";
+
+// Confirms the caller is a signed-in admin — no external requests needed.
+// Returns { email: "..." } on success, or { error: "why it failed" }.
+function verifyAdmin_(p) {
+  var given = (p.secret || "").trim();
+  if (!given) return { error: "no admin key was sent — sign out and back in." };
+  if (given !== ANNOUNCE_SECRET) return { error: "admin key did not match." };
+  var who = (p.admin || "").trim();
+  return { email: who || REPLY_TO };
 }
 
 function handleAnnounceRequest_(p) {
-  var adminEmail = verifyAdmin_(p.token);
-  if (!adminEmail) return jsonOut_({ result: "error", error: "Not authorized — please sign in again." });
+  var who = verifyAdmin_(p);
+  if (who.error) {
+    console.error("Admin verify failed: " + who.error);
+    return jsonOut_({ result: "error", error: "Not authorized — " + who.error });
+  }
+  var adminEmail = who.email;
 
   var audience = p.audience || "Last 12 months";
   var recipients;
