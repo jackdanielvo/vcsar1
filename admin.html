@@ -136,7 +136,7 @@
 
       <div class="field--row">
         <div class="field"><label>Subject line</label>
-          <input type="text" id="an_subject" placeholder="VCSAR Team 1 — Upcoming meeting &amp; training dates" />
+          <input type="text" id="an_subject" value="VCSAR Team 1 — Upcoming meeting &amp; training dates" />
         </div>
         <div class="field"><label>Send to</label>
           <select id="an_audience">
@@ -160,20 +160,21 @@
 
       <div class="field">
         <label>Message</label>
-        <textarea id="an_body" style="min-height:210px" placeholder="Hi {{NAME}},
+        <textarea id="an_body" style="min-height:230px">Hi {{NAME}},
 
-Our next prospective-member meeting is Tuesday, September 9 at 7:00 PM, at the Fillmore SAR building (524 Sespe Ave).
+Our next prospective-member meeting is [DAY, DATE] at [TIME], at the Fillmore SAR building (524 Sespe Ave, Fillmore).
 
-Upcoming training: Saturday, September 20 — land navigation. Bring sturdy boots, water, and a day pack.
+Upcoming training: [DAY, DATE] — [TOPIC]. Please bring sturdy boots, water, and a day pack.
 
-Please reply to let us know if you can make it.
+Please reply to let us know if you can make it. We look forward to seeing you there.
 
 Sincerely yours,
-VCSAR1 Recruiting"></textarea>
+VCSAR1 Recruiting</textarea>
         <p class="field__hint">One paragraph per line (blank lines are ignored). Type <code>{{NAME}}</code> to insert the person's first name. The Sheriff's badge header and footer are added automatically.</p>
       </div>
 
       <div class="an__actions">
+        <button type="button" class="iconbtn" id="an_reset">Reset to template</button>
         <button class="btn btn--ghost" id="an_preview">Send me a preview</button>
         <button class="btn btn--primary" id="an_send">Send to candidates →</button>
       </div>
@@ -469,6 +470,30 @@ async function removeMember(id){
 /* ---------- Email Candidates ---------- */
 const APPS_URL = window.APPS_SCRIPT_URL || "";
 const anStatus = $('an_status');
+
+// Keep the starting template, and remember edits between visits.
+const TPL_SUBJECT = $('an_subject').value;
+const TPL_BODY    = $('an_body').value;
+try {
+  const savedS = localStorage.getItem('vcsar_an_subject');
+  const savedB = localStorage.getItem('vcsar_an_body');
+  if (savedS !== null) $('an_subject').value = savedS;
+  if (savedB !== null) $('an_body').value = savedB;
+} catch(e){}
+function saveDraft(){
+  try {
+    localStorage.setItem('vcsar_an_subject', $('an_subject').value);
+    localStorage.setItem('vcsar_an_body', $('an_body').value);
+  } catch(e){}
+}
+$('an_subject').addEventListener('input', saveDraft);
+$('an_body').addEventListener('input', saveDraft);
+$('an_reset').addEventListener('click', () => {
+  $('an_subject').value = TPL_SUBJECT;
+  $('an_body').value = TPL_BODY;
+  saveDraft();
+  anStatus.className = 'form__status';
+});
 
 function anMsg(text, kind){
   anStatus.innerHTML = text;
