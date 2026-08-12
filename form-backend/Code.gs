@@ -670,6 +670,8 @@ function handleAnnounceRequest_(p) {
 }
 
 // Lets you open the web-app URL in a browser to confirm it's live.
+// The version tag tells you WHICH code the live deployment is running.
 function doGet() {
-  return ContentService.createTextOutput("VCSAR application endpoint is running.");
+  return ContentService.createTextOutput(
+    "VCSAR application endpoint is running. VERSION: announcements-v2");
 }
