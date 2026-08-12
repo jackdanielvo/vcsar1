@@ -364,11 +364,41 @@ async function loadAdmins(){
       '<div><div class="row__name" style="font-size:15px">' + esc(a.email) +
         (isMe ? ' <span style="color:var(--orange);font-size:12px">(you)</span>' : '') + '</div>' +
       '<div class="row__meta">added ' + esc((a.added_at||'').toString().slice(0,10)) + '</div></div>' +
-      '<div class="row__actions">' + (isMe ? '<span class="pill">current</span>'
-        : '<button class="iconbtn danger" data-rm="' + esc(a.email) + '">Remove</button>') + '</div>';
+      '<div class="row__actions">' +
+        '<button class="iconbtn" data-invite="' + esc(a.email) + '">Copy invite</button>' +
+        (isMe ? '' : '<button class="iconbtn danger" data-rm="' + esc(a.email) + '">Remove</button>') +
+      '</div>';
     rows.appendChild(row);
   });
   rows.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => removeAdmin(b.getAttribute('data-rm')));
+  rows.querySelectorAll('[data-invite]').forEach(b => b.onclick = () => copyInvite(b.getAttribute('data-invite'), b));
+}
+
+// Puts ready-to-send setup instructions on the clipboard.
+function inviteText(email){
+  return "You've been given admin access to the VCSAR Team 1 website.\n\n" +
+    "To set up your login:\n" +
+    "1. Go to https://vcsar1.org/admin\n" +
+    "2. Click \"First time here? Create your login\"\n" +
+    "3. Enter this email: " + email + "\n" +
+    "4. Choose a password, then click \"Create your login\"\n" +
+    "5. Click \"Sign In\"\n\n" +
+    "Use that exact email address — it's the one that's been approved.\n" +
+    "From there you can manage the team roster and email candidates.";
+}
+async function copyInvite(email, btn){
+  const txt = inviteText(email);
+  const done = () => { const o = btn.textContent; btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = o; }, 1800); };
+  try { await navigator.clipboard.writeText(txt); done(); }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); }
+    catch(err){ prompt('Copy these instructions:', txt); }
+    ta.remove();
+  }
 }
 
 async function removeAdmin(email){
@@ -391,7 +421,8 @@ $('ad_add').addEventListener('click', async () => {
     st.className = 'form__status err show'; return;
   }
   $('ad_email').value = '';
-  st.innerHTML = '<strong>' + esc(email) + '</strong> approved. Now have them open this page and use “First time here? Create your login” with that same email.';
+  st.innerHTML = '<strong>' + esc(email) + '</strong> approved — no email is sent automatically. ' +
+    'Click <strong>Copy invite</strong> next to their name and send them the instructions.';
   st.className = 'form__status ok show';
   loadAdmins();
 });
