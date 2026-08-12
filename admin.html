@@ -106,6 +106,10 @@
       <div class="field"><label>Password</label><input type="password" id="loginPass" required /></div>
       <button class="btn btn--primary btn--block" type="submit" id="loginBtn">Sign In →</button>
       <div class="form__status" id="loginStatus" role="status"></div>
+      <p style="text-align:center;margin:18px 0 0;font-size:14px;color:var(--muted)">
+        First time here?
+        <a href="#" id="signupLink" style="color:var(--orange);font-weight:600">Create your login</a>
+      </p>
     </form>
   </div>
 
@@ -179,6 +183,31 @@ VCSAR1 Recruiting</textarea>
         <button class="btn btn--primary" id="an_send">Send to candidates →</button>
       </div>
       <div class="form__status" id="an_status" role="status" aria-live="polite"></div>
+    </div>
+
+    <!-- ===== ADMINS ===== -->
+    <div class="panel" id="adminPanel">
+      <div class="panel__head">
+        <div>
+          <h2>Admins</h2>
+          <p class="panel__sub">People allowed to sign in and manage this page.</p>
+        </div>
+        <span class="pill" id="adminCount">—</span>
+      </div>
+
+      <div class="rows" id="adminRows"></div>
+
+      <div class="field--row" style="margin-top:18px">
+        <div class="field"><label>Add an admin by email</label>
+          <input type="email" id="ad_email" placeholder="name@example.com" />
+        </div>
+        <div class="field" style="display:flex;align-items:flex-end">
+          <button class="btn btn--primary" id="ad_add" style="width:100%;justify-content:center">Add admin</button>
+        </div>
+      </div>
+      <p class="field__hint">They'll also need a login. Send them to this page and have them use
+        <strong>“First time here? Create your login”</strong> with this exact email address.</p>
+      <div class="form__status" id="ad_status" role="status" aria-live="polite"></div>
     </div>
   </div>
 </div>
@@ -282,8 +311,9 @@ function showManager(){
   $('manageView').style.display='block';
   $('signoutBtn').style.display = LIVE ? 'inline-flex':'none';
   renderRows();
-  // Load the candidate picker now that we're actually signed in.
+  // Load the candidate picker and admin list now that we're actually signed in.
   if (typeof loadCandidates === 'function') loadCandidates();
+  if (typeof loadAdmins === 'function') loadAdmins();
 }
 
 $('loginForm').addEventListener('submit', async e=>{
@@ -295,6 +325,76 @@ $('loginForm').addEventListener('submit', async e=>{
   showManager(); loadMembers();
 });
 $('signoutBtn').addEventListener('click', async ()=>{ await sb.auth.signOut(); location.reload(); });
+
+// New admins create their own login (they must already be on the allowlist).
+$('signupLink').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const st = $('loginStatus'); st.className = 'form__status';
+  const email = $('loginEmail').value.trim(), pass = $('loginPass').value;
+  if(!email || !pass){
+    st.textContent = 'Enter the email you were approved with, plus a password you choose, then click "Create your login".';
+    st.className = 'form__status err show'; return;
+  }
+  const { error } = await sb.auth.signUp({ email, password: pass });
+  if(error){ st.textContent = error.message; st.className = 'form__status err show'; return; }
+  st.textContent = 'Login created. Click "Sign In →" to continue. (If it says you must confirm your email, check your inbox first.)';
+  st.className = 'form__status ok show';
+});
+
+/* ---------- Admins ---------- */
+async function loadAdmins(){
+  const rows = $('adminRows'), pill = $('adminCount');
+  if(!LIVE){ rows.innerHTML = '<div class="empty">Demo mode.</div>'; pill.textContent='demo mode'; return; }
+  rows.innerHTML = '<div class="empty">Loading…</div>';
+  const { data, error } = await sb.from('admins').select('*').order('email');
+  if(error){
+    rows.innerHTML = '<div class="empty">Could not load admins: ' + esc(error.message) +
+      '<br><small>Have you run SUPABASE-ADMINS.sql yet?</small></div>';
+    pill.textContent = '—'; return;
+  }
+  const me = (await sb.auth.getSession()).data.session?.user?.email || '';
+  pill.textContent = data.length + (data.length===1?' admin':' admins');
+  if(!data.length){ rows.innerHTML = '<div class="empty">No admins listed.</div>'; return; }
+  rows.innerHTML = '';
+  data.forEach(a => {
+    const isMe = a.email.toLowerCase() === me.toLowerCase();
+    const row = document.createElement('div'); row.className = 'row';
+    row.style.gridTemplateColumns = '1fr auto';
+    row.innerHTML =
+      '<div><div class="row__name" style="font-size:15px">' + esc(a.email) +
+        (isMe ? ' <span style="color:var(--orange);font-size:12px">(you)</span>' : '') + '</div>' +
+      '<div class="row__meta">added ' + esc((a.added_at||'').toString().slice(0,10)) + '</div></div>' +
+      '<div class="row__actions">' + (isMe ? '<span class="pill">current</span>'
+        : '<button class="iconbtn danger" data-rm="' + esc(a.email) + '">Remove</button>') + '</div>';
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => removeAdmin(b.getAttribute('data-rm')));
+}
+
+async function removeAdmin(email){
+  if(!confirm('Remove admin access for ' + email + '?\n\nThey will no longer be able to sign in and manage this page.')) return;
+  const { error } = await sb.from('admins').delete().eq('email', email);
+  const st = $('ad_status'); st.className = 'form__status';
+  if(error){ st.textContent = 'Could not remove: ' + error.message; st.className='form__status err show'; return; }
+  st.textContent = email + ' removed.'; st.className = 'form__status ok show';
+  loadAdmins();
+}
+
+$('ad_add').addEventListener('click', async () => {
+  const st = $('ad_status'); st.className = 'form__status';
+  const email = $('ad_email').value.trim().toLowerCase();
+  if(!email || email.indexOf('@') < 0){ st.textContent='Enter a valid email address.'; st.className='form__status err show'; return; }
+  const me = (await sb.auth.getSession()).data.session?.user?.email || '';
+  const { error } = await sb.from('admins').insert({ email: email, added_by: me });
+  if(error){
+    st.textContent = /duplicate/i.test(error.message) ? email + ' is already an admin.' : 'Could not add: ' + error.message;
+    st.className = 'form__status err show'; return;
+  }
+  $('ad_email').value = '';
+  st.innerHTML = '<strong>' + esc(email) + '</strong> approved. Now have them open this page and use “First time here? Create your login” with that same email.';
+  st.className = 'form__status ok show';
+  loadAdmins();
+});
 
 /* ---------- Load + render ---------- */
 async function loadMembers(){
