@@ -75,6 +75,38 @@
   </div>
 </div>
 
+<!-- ============ 80TH ANNIVERSARY FILM ============ -->
+<!-- 2026 only. Afterward, move this to the top of history.html and leave a
+     "Watch the 80th anniversary film →" link here. -->
+<section class="anniv" id="anniversary">
+  <div class="anniv__num" aria-hidden="true">80</div>
+  <div class="wrap">
+    <div class="anniv__grid">
+      <div class="anniv__copy reveal">
+        <span class="eyebrow">80 Years · 1946 – 2026</span>
+        <h2>Eighty years of <span class="lead-accent">answering the call.</span></h2>
+        <p>Since 1946, Team 1 volunteers have left dinner tables and warm beds to bring people home from the backcountry. This film tells that story — the people, the calls, and the county we serve.</p>
+        <div class="anniv__cta">
+          <button class="btn btn--primary" type="button" data-anniv-play>
+            <svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z" fill="currentColor"/></svg>
+            Watch the film
+          </button>
+          <a class="btn btn--ghost" href="history.html">Our history →</a>
+        </div>
+      </div>
+      <div class="anniv__frame reveal" id="anniv-frame">
+        <button class="anniv__poster" type="button" data-anniv-play aria-label="Play the 80th anniversary film">
+          <span class="anniv__play"><svg width="30" height="34" viewBox="0 0 14 16" aria-hidden="true"><path d="M0 0L14 8L0 16Z" fill="#14180f"/></svg></span>
+          <span class="anniv__cap">
+            <span class="anniv__cap-t">VCSAR Team 1 · 80th Anniversary</span>
+            <span class="anniv__cap-s">Watch · YouTube</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ MISSION ============ -->
 <section class="section" id="mission">
   <div class="topo"></div>
@@ -267,6 +299,29 @@
     es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: .12 });
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  // ---- 80th anniversary film: load the YouTube player only on click ----
+  (function(){
+    var frame = document.getElementById('anniv-frame');
+    if(!frame) return;
+    var ID = '2hCNZK0nWYQ', poster = frame.querySelector('.anniv__poster');
+    // YouTube serves a 120×90 grey placeholder when there's no maxres thumbnail.
+    var probe = new Image();
+    probe.onload = function(){ if(probe.naturalWidth <= 120) poster.style.backgroundImage = 'url(https://img.youtube.com/vi/' + ID + '/hqdefault.jpg)'; };
+    probe.src = 'https://img.youtube.com/vi/' + ID + '/maxresdefault.jpg';
+    function play(){
+      if(frame.querySelector('iframe')) return;
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + ID + '?autoplay=1&rel=0&modestbranding=1';
+      f.title = 'VCSAR Team 1 — 80th Anniversary';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      frame.innerHTML = '';
+      frame.appendChild(f);
+      f.focus();
+    }
+    document.querySelectorAll('[data-anniv-play]').forEach(function(b){ b.addEventListener('click', play); });
+  })();
 
   // ---- Animated stat counters ----
   (function(){

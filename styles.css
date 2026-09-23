@@ -209,6 +209,64 @@ h1,h2,h3 { font-family: "Oswald", "Arial Narrow", sans-serif; text-transform: up
 .stat__n { font-family: "Oswald", sans-serif; font-weight: 700; font-size: clamp(34px,4vw,52px); line-height: 1; }
 .stat__l { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 600; margin-top: 8px; }
 
+/* ---- 80th anniversary film (homepage, 2026) ------------- */
+/* After 2026: move this block to the top of history.html.    */
+.anniv {
+  position: relative; overflow: hidden;
+  padding: clamp(64px, 9vw, 128px) 0;
+  background: radial-gradient(90% 70% at 0% 0%, rgba(255,90,31,.10), rgba(255,90,31,0) 60%), #14180f;
+}
+.anniv__num {
+  position: absolute; right: clamp(-40px, -2vw, 0px); top: clamp(20px, 4vw, 48px);
+  font: 700 clamp(180px, 30vw, 420px)/.8 "Oswald", sans-serif; letter-spacing: -.04em;
+  color: rgba(244,241,232,.035); pointer-events: none; user-select: none;
+}
+.anniv__grid {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: clamp(36px, 5vw, 72px); align-items: center;
+}
+.anniv__copy { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.anniv__copy h2 { margin: 0; font-size: clamp(48px, 6.4vw, 92px); font-weight: 700; line-height: .9; letter-spacing: -.01em; text-wrap: balance; }
+.anniv__copy p { margin: 0; max-width: 560px; font-size: 19px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+.anniv__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
+.anniv__frame {
+  position: relative; min-width: 0; aspect-ratio: 16/9;
+  background: #0b0d07; border: 1px solid rgba(244,241,232,.14);
+}
+.anniv__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.anniv__poster {
+  position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; cursor: pointer;
+  background: #0b0d07 url("https://img.youtube.com/vi/2hCNZK0nWYQ/maxresdefault.jpg") center/cover no-repeat;
+  color: var(--text); font: inherit;
+}
+.anniv__poster::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(8,10,5,.15) 40%, rgba(8,10,5,.85) 100%);
+}
+.anniv__play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: 96px; height: 96px; border-radius: 50%; background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 12px rgba(255,90,31,.22);
+  transition: transform .25s var(--ease), box-shadow .25s;
+}
+.anniv__play svg { margin-left: 6px; }
+.anniv__poster:hover .anniv__play,
+.anniv__poster:focus-visible .anniv__play { transform: translate(-50%,-50%) scale(1.06); box-shadow: 0 0 0 16px rgba(255,90,31,.28); }
+.anniv__cap {
+  position: absolute; left: 24px; right: 24px; bottom: 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; text-align: left;
+}
+.anniv__cap-t { font: 600 clamp(18px, 2vw, 24px)/1.1 "Oswald", sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.anniv__cap-s { flex: none; font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: rgba(244,241,232,.7); }
+@media (max-width: 520px) {
+  .anniv__play { width: 72px; height: 72px; }
+  .anniv__play svg { width: 22px; height: 26px; margin-left: 4px; }
+  .anniv__cap { left: 16px; right: 16px; bottom: 14px; }
+  .anniv__cap-s { display: none; }
+}
+
 /* ---- Generic section heads ------------------------------ */
 .shead { max-width: 760px; margin-bottom: 56px; }
 .shead h2 { font-size: clamp(34px, 5.5vw, 64px); font-weight: 700; line-height: .98; margin: 16px 0 0; }
